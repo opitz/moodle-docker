@@ -1,12 +1,13 @@
 version: "2"
 services:
   webserver:
-    image: "moodlehq/moodle-php-apache:${MOODLE_DOCKER_PHP_VERSION}"
+    image: "qmulits/moodlehost:${MOODLE_DOCKER_PHP_VERSION}"
     depends_on:
       - db
     volumes:
       - "${MOODLE_DOCKER_WWWROOT}:/var/www/html"
       - "${ASSETDIR}/web/apache2_faildumps.conf:/etc/apache2/conf-enabled/apache2_faildumps.conf"
+      - "${PWD}/config.docker-template.php:/var/www/html/config.php"
     environment:
       MOODLE_DOCKER_DBTYPE: pgsql
       MOODLE_DOCKER_DBNAME: moodle

@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+
+export MOODLE_DOCKER_WWWROOT=$1
+#export MOODLE_DOCKER_DB=mysql
+export MOODLE_DOCKER_DB=pgsql
+export MOODLE_DOCKER_SELENIUM_VNC_PORT=5900
+export MOODLE_DOCKER_PHP_VERSION=7.1
+
+usage() {
+	echo "usage: behat-test <path/to/moodlecode> [<tags>]"
+	exit 1
+}
+
+if [[ $1 == "" ]]
+then
+	usage
+fi
+
+if [[ $2 == 'start' ]]
+then
+	echo "Starting testing environment"
+	bin/moodle-docker-compose up -d
+	bin/moodle-docker-wait-for-db
+
+	echo "==> You may now start a VNC client pointing at 0.0.0.0:5900 and enter the password 'secret'"
+
+
+	echo "Initializing behat testing"
+	bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/init.php
+	echo "Behat testing up and ready for tests"
+	exit 1
+fi
+
+if [[ $2 == 'stop' ]]
+then 
+	read -p "Do you really want to stop and remove the testing environment (y/N) " -n 1 -r
+	echo    # (optional) move to a new line
+	if [[ $REPLY =~ ^[Yy]$ ]]
+	then
+		echo "Bye..."
+		# Shut down and destroy containers
+		bin/moodle-docker-compose down
+	    exit 1
+	else
+		echo "Aborting..."
+		exit 1
+	fi
+fi
+
+if [[ $2 == 'restart' ]]
+then 
+        read -p "Do you really want to stop and restart the testing environment (y/N) " -n 1 -r
+        echo    # (optional) move to a new line
+        if [[ $REPLY =~ ^[Yy]$ ]]
+        then
+                echo "Restarting the behat testing environment, please be patient..."
+                # Shut down and destroy containers
+                bin/moodle-docker-compose down
+		bin/moodle-docker-compose up -d
+	        bin/moodle-docker-wait-for-db
+	        echo "==> You may now start a VNC client pointing at 0.0.0.0:5900 and enter the password 'secret'"
+
+	        echo "Initializing behat testing"
+	        bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/init.php
+	        echo "Behat testing up and ready for tests"
+            exit 1
+        else
+                echo "Aborting..."
+                exit 1
+        fi
+fi
+
+if [[ $2 == "" ]]
+then
+	read -p "This will run for a VERY long time! Are you sure to test the complete system? (y/N) " -n 1 -r
+	echo    # (optional) move to a new line
+	if [[ ! $REPLY =~ ^[Yy]$ ]]
+	then
+		echo "Aborting..."
+	    exit 1
+	fi
+fi
+#echo "here we go..."
+
+# Run behat tests
+if [[ $2 == '' ]]
+then
+	bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php
+else
+	if [[ $3 ==  '--rerun' ]]
+	then
+		bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --tags=@$2 --rerun
+	else
+		bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --tags=@$2
+	fi
+fi
+
+echo "==> FIN"
+

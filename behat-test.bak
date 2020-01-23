@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+usage() {
+	echo "usage: behat-test <path/to/moodlecode>"
+	exit 1
+}
+
+if [ $1 == "" ]
+then
+	usage
+fi
+
+export MOODLE_DOCKER_WWWROOT=$1
+#export MOODLE_DOCKER_DB=mysql
+export MOODLE_DOCKER_DB=pgsql
+export MOODLE_DOCKER_SELENIUM_VNC_PORT=5900
+
+# Start up containers
+bin/moodle-docker-compose up -d
+
+bin/moodle-docker-wait-for-db
+
+echo "==> You may now start a VNC client pointing at 0.0.0.0:5900 and enter the password 'secret'"
+
+# Initialize behat environment
+bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/init.php
+
+# Run behat tests
+#bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --tags=@auth_manual
+bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --tags=@format_topics2
+#bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php
+# Shut down and destroy containers
+bin/moodle-docker-compose down
+
+echo "==> FIN"
+

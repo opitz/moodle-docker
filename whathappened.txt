@@ -1,0 +1,1490 @@
+Starting testing environment
+==> You may now start a VNC client pointing at 0.0.0.0:5900 and enter the password 'secret'
+Initializing behat testing
+You are already using composer version 1.9.2 (stable channel).
+Loading composer repositories with package information
+Installing dependencies (including require-dev) from lock file
+Warning: The lock file is not up to date with the latest changes in composer.json. You may be getting outdated dependencies. It is recommended that you run `composer update` or `composer update <package name>`.
+Nothing to install or update
+Generating autoload files
+-->System
+++ Success ++
+-->antivirus_clamav
+++ Success ++
+-->availability_completion
+++ Success ++
+-->availability_date
+++ Success ++
+-->availability_grade
+++ Success ++
+-->availability_group
+++ Success ++
+-->availability_grouping
+++ Success ++
+-->availability_profile
+++ Success ++
+-->qtype_algebra
+++ Success ++
+-->qtype_calculated
+++ Success ++
+-->qtype_calculatedmulti
+++ Success ++
+-->qtype_calculatedsimple
+++ Success ++
+-->qtype_ddimageortext
+++ Success ++
+-->qtype_ddmarker
+++ Success ++
+-->qtype_ddmatch
+++ Success ++
+-->qtype_ddwtos
+++ Success ++
+-->qtype_description
+++ Success ++
+-->qtype_essay
+++ Success ++
+-->qtype_gapfill
+++ Success ++
+-->qtype_gapselect
+++ Success ++
+-->qtype_jme
+++ Success ++
+-->qtype_match
+++ Success ++
+-->qtype_missingtype
+++ Success ++
+-->qtype_multianswer
+++ Success ++
+-->qtype_multichoice
+++ Success ++
+-->qtype_multichoiceset
+++ Success ++
+-->qtype_multinumerical
+++ Success ++
+-->qtype_numerical
+++ Success ++
+-->qtype_opaque
+++ Success ++
+-->qtype_order
+++ Success ++
+-->qtype_ordering
+++ Success ++
+-->qtype_pmatch
+++ Success ++
+-->qtype_pmatchjme
+++ Success ++
+-->qtype_pmatchreverse
+++ Success ++
+-->qtype_poasquestion
+++ Success ++
+-->qtype_random
+++ Success ++
+-->qtype_randomsamatch
+++ Success ++
+-->qtype_shortanswer
+++ Success ++
+-->qtype_truefalse
+++ Success ++
+-->qtype_varnumeric
+++ Success ++
+-->qtype_varnumericset
+++ Success ++
+-->qtype_varnumunit
+++ Success ++
+-->mod_adaptivequiz
+++ Success ++
+-->mod_aspirelist
+++ Success ++
+-->mod_aspirelists
+++ Success ++
+-->mod_assign
+++ Success ++
+-->mod_assignment
+++ Success ++
+-->mod_attendance
+++ Success ++
+-->mod_book
+++ Success ++
+-->mod_certificate
+++ Success ++
+-->mod_chat
+++ Success ++
+-->mod_checklist
+++ Success ++
+-->mod_choice
+++ Success ++
+-->mod_choicegroup
+++ Success ++
+-->mod_collaborate
+++ Success ++
+-->mod_data
+++ Success ++
+-->mod_facetoface
+++ Success ++
+-->mod_feedback
+++ Success ++
+-->mod_folder
+++ Success ++
+-->mod_forum
+++ Success ++
+-->mod_forumng
+++ Success ++
+-->mod_glossary
+++ Success ++
+-->mod_hvp
+<h3>Welcome to the world of H5P!</h3><p>To get started with H5P and Moodle take a look at our <a href="https://h5p.org/moodle" target="_blank">tutorial</a> and check out the <a href="https://h5p.org/content-types-and-applications" target="_blank">example content</a> at H5P.org for inspiration.</p><p>We hope you will enjoy H5P and get engaged in our growing community through our <a href="https://h5p.org/forum" target="_blank">forums</a>.</p><p>If you have any feedback, don't hesitate to <a href="https://h5p.org/contact" target="_blank">contact us</a>. We take feedback very seriously and are dedicated to making H5P better every day!</p><p>H5P fetches content types directly from the H5P Hub. In order to do this the H5P plugin will communicate with the Hub once a day to fetch information about new and updated content types. It will send in anonymous data to the Hub about H5P usage. Read more at <a href="https://h5p.org/tracking-the-usage-of-h5p">the plugin communication page at H5P.org</a>.</p>!! Your site was successfully registered with the H5P Hub. !!
+!! Library cache was successfully updated! !!
+!! Your PHP max upload size is quite small. With your current setup, you may not upload files larger than 2.00 MB. This might be a problem when trying to upload H5Ps, images and videos. Please consider to increase it to more than 5MB. !!
+++ Success ++
+-->mod_imscp
+++ Success ++
+-->mod_journal
+++ Success ++
+-->mod_kalvidassign
+++ Success ++
+-->mod_kalvidpres
+++ Success ++
+-->mod_kalvidres
+++ Success ++
+-->mod_label
+++ Success ++
+-->mod_lesson
+++ Success ++
+-->mod_lightboxgallery
+++ Success ++
+-->mod_lti
+++ Success ++
+-->mod_nln
+++ Success ++
+-->mod_oublog
+++ Success ++
+-->mod_ouwiki
+++ Success ++
+-->mod_page
+++ Success ++
+-->mod_pearson
+++ Success ++
+-->mod_qmevaluation
+++ Success ++
+-->mod_questionnaire
+++ Success ++
+-->mod_quiz
+++ Success ++
+-->mod_ratingallocate
+++ Success ++
+-->mod_resource
+++ Success ++
+-->mod_scheduler
+++ Success ++
+-->mod_scorm
+++ Success ++
+-->mod_subcourse
+++ Success ++
+-->mod_subpage
+++ Success ++
+-->mod_survey
+++ Success ++
+-->mod_tab
+++ Success ++
+-->mod_turnitintool
+++ Success ++
+-->mod_turnitintooltwo
+++ Success ++
+-->mod_url
+++ Success ++
+-->mod_wiki
+++ Success ++
+-->mod_workshop
+++ Success ++
+-->auth_cas
+++ Success ++
+-->auth_cas_db
+++ Success ++
+-->auth_db
+++ Success ++
+-->auth_email
+++ Success ++
+-->auth_ldap
+++ Success ++
+-->auth_lti
+++ Success ++
+-->auth_manual
+++ Success ++
+-->auth_mnet
+++ Success ++
+-->auth_nologin
+++ Success ++
+-->auth_none
+++ Success ++
+-->auth_oauth2
+++ Success ++
+-->auth_oidc
+++ Success ++
+-->auth_saml2
+++ Success ++
+-->auth_ulcc_sharedsecret_sso
+++ Success ++
+-->auth_webservice
+++ Success ++
+-->calendartype_gregorian
+++ Success ++
+-->enrol_auto
+++ Success ++
+-->enrol_category
+++ Success ++
+-->enrol_cohort
+++ Success ++
+-->enrol_database
+++ Success ++
+-->enrol_databaseextended
+++ Success ++
+-->enrol_flatfile
+++ Success ++
+-->enrol_guest
+++ Success ++
+-->enrol_imsenterprise
+++ Success ++
+-->enrol_ldap
+++ Success ++
+-->enrol_lti
+++ Success ++
+-->enrol_manual
+++ Success ++
+-->enrol_meta
+++ Success ++
+-->enrol_mnet
+++ Success ++
+-->enrol_paypal
+++ Success ++
+-->enrol_self
+++ Success ++
+-->message_airnotifier
+++ Success ++
+-->message_email
+++ Success ++
+-->message_jabber
+++ Success ++
+-->message_popup
+++ Success ++
+-->block_accessibility
+++ Success ++
+-->block_activity_modules
+++ Success ++
+-->block_activity_results
+++ Success ++
+-->block_admin_bookmarks
+++ Success ++
+-->block_aspirelists
+++ Success ++
+-->block_assessment_information
+++ Success ++
+-->block_attendance
+++ Success ++
+-->block_badges
+++ Success ++
+-->block_blog_menu
+++ Success ++
+-->block_blog_recent
+++ Success ++
+-->block_blog_tags
+++ Success ++
+-->block_bulkactivity
+++ Success ++
+-->block_calendar_month
+++ Success ++
+-->block_calendar_upcoming
+++ Success ++
+-->block_checklist
+++ Success ++
+-->block_comments
+++ Success ++
+-->block_community
+++ Success ++
+-->block_completion_progress
+++ Success ++
+-->block_completionstatus
+++ Success ++
+-->block_course_contents
+++ Success ++
+-->block_course_list
+++ Success ++
+-->block_course_menu
+++ Success ++
+-->block_course_overview
+++ Success ++
+-->block_course_overview_campus
+++ Success ++
+-->block_course_profile
+++ Success ++
+-->block_course_reports
+++ Success ++
+-->block_course_summary
+++ Success ++
+-->block_feedback
+++ Success ++
+-->block_globalsearch
+++ Success ++
+-->block_glossary_random
+++ Success ++
+-->block_glsubs
+++ Success ++
+-->block_heatmap
+++ Success ++
+-->block_html
+++ Success ++
+-->block_kortext
+++ Success ++
+-->block_landingpage
+++ Success ++
+-->block_login
+++ Success ++
+-->block_lp
+++ Success ++
+-->block_massaction
+++ Success ++
+-->block_mentees
+++ Success ++
+-->block_messages
+++ Success ++
+-->block_microsoft
+++ Success ++
+-->block_mnet_hosts
+++ Success ++
+-->block_modlib
+++ Success ++
+-->block_myoverview
+++ Success ++
+-->block_myprofile
+++ Success ++
+-->block_navigation
+++ Success ++
+-->block_news_items
+++ Success ++
+-->block_onenote
+++ Success ++
+-->block_online_users
+++ Success ++
+-->block_participants
+++ Success ++
+-->block_pearson
+++ Success ++
+-->block_private_files
+++ Success ++
+-->block_progress
+++ Success ++
+-->block_qmplus_course_overview
+++ Success ++
+-->block_qmul_blindmarking
+++ Success ++
+-->block_qmul_course_mappings
+++ Success ++
+-->block_qmul_course_metadata
+++ Success ++
+-->block_qmul_my_qmplus
+++ Success ++
+-->block_qmul_myprofile
+++ Success ++
+-->block_quickmail
+++ Success ++
+-->block_quickscan
+++ Success ++
+-->block_quiz_results
+++ Success ++
+-->block_recent_activity
+++ Success ++
+-->block_recentlyaccessedcourses
+++ Success ++
+-->block_recentlyaccesseditems
+++ Success ++
+-->block_rss_client
+++ Success ++
+-->block_search_forums
+++ Success ++
+-->block_section_links
+++ Success ++
+-->block_selfcompletion
+++ Success ++
+-->block_settings
+++ Success ++
+-->block_sharing_cart
+++ Success ++
+-->block_side_bar
+++ Success ++
+-->block_site_main_menu
+++ Success ++
+-->block_social_activities
+++ Success ++
+-->block_starredcourses
+++ Success ++
+-->block_tag_flickr
+++ Success ++
+-->block_tag_youtube
+++ Success ++
+-->block_tags
+++ Success ++
+-->block_timeline
+++ Success ++
+-->block_turnitin
+++ Success ++
+-->block_ulcc_diagnostics
+++ Success ++
+-->block_widgets
+++ Success ++
+-->block_xp
+++ Success ++
+-->media_html5audio
+++ Success ++
+-->media_html5video
+++ Success ++
+-->media_swf
+++ Success ++
+-->media_videojs
+++ Success ++
+-->media_vimeo
+++ Success ++
+-->media_youtube
+++ Success ++
+-->filter_activitynames
+++ Success ++
+-->filter_algebra
+++ Success ++
+-->filter_censor
+++ Success ++
+-->filter_data
+++ Success ++
+-->filter_easychem
+++ Success ++
+-->filter_emailprotect
+++ Success ++
+-->filter_emoticon
+++ Success ++
+-->filter_freemind
+++ Success ++
+-->filter_glossary
+++ Success ++
+-->filter_h5p
+++ Success ++
+-->filter_imageopt
+++ Success ++
+-->filter_jmol
+++ Success ++
+-->filter_kaltura
+++ Success ++
+-->filter_mathjaxloader
+++ Success ++
+-->filter_mediaplugin
+++ Success ++
+-->filter_multilang
+++ Success ++
+-->filter_oembed
+      creating 23HQ
+      creating Abraia
+      creating Adways
+      creating Alpha App Net
+      creating Altru
+      creating amCharts Live Editor
+      creating Animatron
+      creating Animoto
+      creating Apester
+      creating ArcGIS StoryMaps
+      creating Archivos
+      creating Audioboom
+      creating AudioClip
+      creating Audiomack
+      creating AudioSnaps
+      creating Avocode
+      creating Backtracks
+      creating Beautiful.AI
+      creating Blackfire.io
+      creating Blogcast
+      creating Box Office Buz
+      creating BrioVR
+      creating Buttondown
+      creating Byzart Project
+      creating Cacoo
+      creating Carbon Health
+      creating CatBoat
+      creating Ceros
+      creating ChartBlocks
+      creating chirbit.com
+      creating CircuitLab
+      creating Clipland
+      creating Clyp
+      creating CodeHS
+      creating Codepen
+      creating Codepoints
+      creating CodeSandbox
+      creating CollegeHumor
+      creating Commaful
+      creating Coub
+      creating Crowd Ranking
+      creating Cyrano Systems
+      creating Daily Mile
+      creating Dailymotion
+      creating Deseret News
+      creating Deviantart.com
+      creating Didacte
+      creating Digiteka
+      creating Dipity
+      creating DocDroid
+      creating Dotsub
+      creating DTube
+      creating edocr
+      creating eduMedia
+      creating EgliseInfo
+      creating Embed Articles
+      creating Embedly
+      creating Ethfiddle
+      creating Eyrie
+      creating Facebook
+      creating Fader
+      creating Faithlife TV
+      creating FITE
+      creating Flat
+      creating Flickr
+      creating Flourish
+      creating Fontself
+      creating FOX SPORTS Australia
+      creating FrameBuzz
+      creating FunnyOrDie
+      creating Geograph Britain and Ireland
+      creating Geograph Channel Islands
+      creating Geograph Germany
+      creating Getty Images
+      creating Gfycat
+      creating Gifnote
+      creating GIPHY
+      creating GloriaTV
+      creating GT Channel
+      creating Gyazo
+      creating hearthis.at
+      creating Homey
+      creating HuffDuffer
+      creating Hulu
+      creating iFixit
+      creating IFTTT
+      creating Indaco
+      creating Infogram
+      creating Infoveave
+      creating Injurymap
+      creating Inoreader
+      creating inphood
+      creating Instagram
+      creating iSnare Articles
+      creating Issuu
+      creating ivlismusic
+      creating Jovian
+      creating KakaoTv
+      creating Kickstarter
+      creating Kidoju
+      creating Kirim.Email
+      creating Kit
+      creating Kitchenbowl
+      creating Knacki
+      creating LearningApps.org
+      creating Lille.Pod
+      creating Livestream
+      creating Ludus
+      creating MathEmbed
+      creating Matterport
+      creating me.me
+      creating Medienarchiv der Künste - Zürcher Hochschule der Künste
+      creating Meetup
+      creating Mermaid Ink
+      creating Microlink
+      creating MixCloud
+      creating Moby Picture
+      creating Modelo
+      creating MorphCast
+      creating Music Box Maniacs
+      creating myBeweeg
+      creating Namchey
+      creating nanoo.tv
+      creating Nasjonalbiblioteket
+      creating Natural Atlas
+      creating nfb.ca
+      creating Odds.com.au
+      creating Official FM
+      creating Omniscope
+      creating On Aol
+      creating Ora TV
+      creating Orbitvu
+      creating Oumy
+      creating Outplayed.tv
+      creating Overflow
+      creating OZ
+      creating Pastery
+      creating PingVP
+      creating Pixdor
+      creating Podbean
+      creating Polaris Share
+      creating Poll Daddy
+      creating Port
+      creating Portfolium
+      creating posiXion
+      creating Quiz.biz
+      creating Quizz.biz
+      creating RapidEngage
+      creating Reddit
+      creating ReleaseWire
+      creating Replit
+      creating RepubHub
+      creating ReverbNation
+      creating RiffReporter
+      creating Roomshare
+      creating RoosterTeeth
+      creating Rumble
+      creating Sapo Videos
+      creating Screen9
+      creating Screencast.com
+      creating Screenr
+      creating ScribbleMaps
+      creating Scribd
+      creating SendtoNews
+      creating ShortNote
+      creating Shoudio
+      creating Show the Way, actionable location info
+      creating Simplecast
+      creating Sizzle
+      creating Sketchfab
+      creating SlideShare
+      creating SmashNotes
+      creating SmugMug
+      creating SocialExplorer
+      creating Songlink
+      creating SoundCloud
+      creating Soundsgood
+      creating SpeakerDeck
+      creating Spotful
+      creating Spotify
+      creating Spreaker
+      creating Stanford Digital Repository
+      creating Streamable
+      creating StreamOneCloud
+      creating Sutori
+      creating Sway
+      creating TED
+      creating The New York Times
+      creating They Said So
+      creating TickCounter
+      creating Toornament
+      creating Topy
+      creating Tuxx
+      creating tvcf
+      creating Twitch
+      creating Twitter
+      creating TypeCast
+      creating Typlog
+      creating Ubideo
+      creating University of Cambridge Map
+      creating UnivParis1.Pod
+      creating UOL
+      creating Ustream
+      creating uStudio, Inc.
+      creating Utposts
+      creating Uttles
+      creating VeeR VR
+      creating Verse
+      creating VEVO
+      creating VideoJug
+      creating Vidlit
+      creating Vidmizer
+      creating Vidyard
+      creating Vimeo
+      creating Viziosphere
+      creating Vizydrop
+      creating Vlipsy
+      creating VLIVE
+      creating Vlurb
+      creating VoxSnap
+      creating wecandeo
+      creating Wiredrive
+      creating Wistia, Inc.
+      creating wizer.me
+      creating Wootled
+      creating WordPress.com
+      creating Xpression
+      creating Yes, I Know IT!
+      creating YFrog
+      creating YouTube
+      creating ZingSoft
+      creating ZnipeTV
+      creating Office365 Video
+      creating Power BI
+      creating Poll Everywhere
+      creating ISSUU
+      creating Docs
+      creating Office Forms
+++ Success ++
+-->filter_replace
+++ Success ++
+-->filter_tex
+++ Success ++
+-->filter_tidy
+++ Success ++
+-->filter_urltolink
+++ Success ++
+-->editor_atto
+++ Success ++
+-->editor_textarea
+++ Success ++
+-->editor_tinymce
+++ Success ++
+-->format_flexsections
+++ Success ++
+-->format_grid
+++ Success ++
+-->format_landingpage
+++ Success ++
+-->format_qmulgrid
+++ Success ++
+-->format_qmultc
+++ Success ++
+-->format_qmultopics
+++ Success ++
+-->format_qmulweeks
+++ Success ++
+-->format_singleactivity
+++ Success ++
+-->format_social
+++ Success ++
+-->format_topcoll
+++ Success ++
+-->format_topics
+++ Success ++
+-->format_topics2
+++ Success ++
+-->format_weeks
+++ Success ++
+-->format_weeks2
+++ Success ++
+-->dataformat_csv
+++ Success ++
+-->dataformat_excel
+++ Success ++
+-->dataformat_html
+++ Success ++
+-->dataformat_json
+++ Success ++
+-->dataformat_ods
+++ Success ++
+-->profilefield_checkbox
+++ Success ++
+-->profilefield_datetime
+++ Success ++
+-->profilefield_menu
+++ Success ++
+-->profilefield_o365
+++ Success ++
+-->profilefield_oidc
+++ Success ++
+-->profilefield_text
+++ Success ++
+-->profilefield_textarea
+++ Success ++
+-->report_backups
+++ Success ++
+-->report_competency
+++ Success ++
+-->report_completion
+++ Success ++
+-->report_componentgrades
+++ Success ++
+-->report_configlog
+++ Success ++
+-->report_courseoverview
+++ Success ++
+-->report_eventlist
+++ Success ++
+-->report_forumgraph
+++ Success ++
+-->report_insights
+++ Success ++
+-->report_log
+++ Success ++
+-->report_loglive
+++ Success ++
+-->report_outline
+++ Success ++
+-->report_overviewstats
+++ Success ++
+-->report_participation
+++ Success ++
+-->report_performance
+++ Success ++
+-->report_progress
+++ Success ++
+-->report_qmplus
+++ Success ++
+-->report_questioninstances
+++ Success ++
+-->report_security
+++ Success ++
+-->report_stats
+++ Success ++
+-->report_usersessions
+++ Success ++
+-->gradeexport_checklist
+++ Success ++
+-->gradeexport_ods
+++ Success ++
+-->gradeexport_txt
+++ Success ++
+-->gradeexport_xls
+++ Success ++
+-->gradeexport_xml
+++ Success ++
+-->gradeimport_csv
+++ Success ++
+-->gradeimport_direct
+++ Success ++
+-->gradeimport_directpearsonjson
+++ Success ++
+-->gradeimport_xml
+++ Success ++
+-->gradereport_grader
+++ Success ++
+-->gradereport_history
+++ Success ++
+-->gradereport_marking
+++ Success ++
+-->gradereport_outcomes
+++ Success ++
+-->gradereport_overview
+++ Success ++
+-->gradereport_qmul_sits
+_++ Success ++
+-->gradereport_singleview
+++ Success ++
+-->gradereport_user
+++ Success ++
+-->gradingform_btec
+++ Success ++
+-->gradingform_guide
+++ Success ++
+-->gradingform_rubric
+++ Success ++
+-->mlbackend_php
+++ Success ++
+-->mlbackend_python
+++ Success ++
+-->mnetservice_enrol
+++ Success ++
+-->webservice_rest
+++ Success ++
+-->webservice_soap
+++ Success ++
+-->webservice_xmlrpc
+++ Success ++
+-->repository_areafiles
+++ Success ++
+-->repository_boxnet
+++ Success ++
+-->repository_coursefiles
+++ Success ++
+-->repository_dropbox
+++ Success ++
+-->repository_equella
+++ Success ++
+-->repository_evernote
+++ Success ++
+-->repository_filesystem
+++ Success ++
+-->repository_flickr
+++ Success ++
+-->repository_flickr_public
+++ Success ++
+-->repository_googledocs
+++ Success ++
+-->repository_local
+++ Success ++
+-->repository_merlot
+++ Success ++
+-->repository_nextcloud
+++ Success ++
+-->repository_office365
+++ Success ++
+-->repository_onedrive
+++ Success ++
+-->repository_picasa
+++ Success ++
+-->repository_recent
+++ Success ++
+-->repository_s3
+++ Success ++
+-->repository_skydrive
+++ Success ++
+-->repository_upload
+++ Success ++
+-->repository_url
+++ Success ++
+-->repository_user
+++ Success ++
+-->repository_webdav
+++ Success ++
+-->repository_wikimedia
+++ Success ++
+-->repository_youtube
+++ Success ++
+-->portfolio_boxnet
+++ Success ++
+-->portfolio_download
+++ Success ++
+-->portfolio_flickr
+++ Success ++
+-->portfolio_googledocs
+++ Success ++
+-->portfolio_mahara
+++ Success ++
+-->portfolio_picasa
+++ Success ++
+-->search_simpledb
+++ Success ++
+-->search_solr
+++ Success ++
+-->qbehaviour_adaptive
+++ Success ++
+-->qbehaviour_adaptivehints
+++ Success ++
+-->qbehaviour_adaptivehintsnopenalties
+++ Success ++
+-->qbehaviour_adaptivemultipart
+++ Success ++
+-->qbehaviour_adaptivenopenalty
+++ Success ++
+-->qbehaviour_deferredcbm
+++ Success ++
+-->qbehaviour_deferredfeedback
+++ Success ++
+-->qbehaviour_dfcbmexplicitvaildate
+++ Success ++
+-->qbehaviour_dfexplicitvaildate
+++ Success ++
+-->qbehaviour_immediatecbm
+++ Success ++
+-->qbehaviour_immediatefeedback
+++ Success ++
+-->qbehaviour_informationitem
+++ Success ++
+-->qbehaviour_interactive
+++ Success ++
+-->qbehaviour_interactivecountback
+++ Success ++
+-->qbehaviour_interactivehints
+++ Success ++
+-->qbehaviour_manualgraded
+++ Success ++
+-->qbehaviour_missing
+++ Success ++
+-->qbehaviour_opaque
+++ Success ++
+-->qformat_aiken
+++ Success ++
+-->qformat_blackboard_six
+++ Success ++
+-->qformat_examview
+++ Success ++
+-->qformat_gift
+++ Success ++
+-->qformat_missingword
+++ Success ++
+-->qformat_multianswer
+++ Success ++
+-->qformat_webct
+++ Success ++
+-->qformat_wordtable
+++ Success ++
+-->qformat_xhtml
+++ Success ++
+-->qformat_xml
+++ Success ++
+-->plagiarism_turnitin
+++ Success ++
+-->tool_analytics
+++ Success ++
+-->tool_availabilityconditions
+++ Success ++
+-->tool_behat
+++ Success ++
+-->tool_capability
+++ Success ++
+-->tool_cohortroles
+++ Success ++
+-->tool_customlang
+++ Success ++
+-->tool_dataprivacy
+++ Success ++
+-->tool_dbtransfer
+++ Success ++
+-->tool_filetypes
+++ Success ++
+-->tool_generator
+++ Success ++
+-->tool_health
+++ Success ++
+-->tool_httpsreplace
+++ Success ++
+-->tool_innodb
+++ Success ++
+-->tool_installaddon
+++ Success ++
+-->tool_langimport
+++ Success ++
+-->tool_log
+++ Success ++
+-->tool_lp
+++ Success ++
+-->tool_lpimportcsv
+++ Success ++
+-->tool_lpmigrate
+++ Success ++
+-->tool_mergeusers
+++ Success ++
+-->tool_messageinbound
+++ Success ++
+-->tool_mobile
+++ Success ++
+-->tool_monitor
+++ Success ++
+-->tool_multilangupgrade
+++ Success ++
+-->tool_oauth2
+++ Success ++
+-->tool_phpunit
+++ Success ++
+-->tool_policy
+++ Success ++
+-->tool_profiling
+++ Success ++
+-->tool_recyclebin
+++ Success ++
+-->tool_replace
+++ Success ++
+-->tool_spamcleaner
+++ Success ++
+-->tool_task
+++ Success ++
+-->tool_templatelibrary
+++ Success ++
+-->tool_unsuproles
+++ Success ++
+-->tool_uploadcourse
+++ Success ++
+-->tool_uploaduser
+++ Success ++
+-->tool_usertours
+++ Success ++
+-->tool_xmldb
+++ Success ++
+-->cachestore_apcu
+++ Success ++
+-->cachestore_file
+++ Success ++
+-->cachestore_memcached
+++ Success ++
+-->cachestore_mongodb
+++ Success ++
+-->cachestore_redis
+++ Success ++
+-->cachestore_session
+++ Success ++
+-->cachestore_static
+++ Success ++
+-->cachelock_file
+++ Success ++
+-->fileconverter_googledrive
+++ Success ++
+-->fileconverter_onedrive
+++ Success ++
+-->fileconverter_unoconv
+++ Success ++
+-->theme_boost
+++ Success ++
+-->theme_boost_o365teams
+++ Success ++
+-->theme_bootstrapbase
+++ Success ++
+-->theme_clean
+++ Success ++
+-->theme_essential
+++ Success ++
+-->theme_klass
+++ Success ++
+-->theme_more
+++ Success ++
+-->theme_synergy_bootstrap
+++ Success ++
+-->assignsubmission_comments
+++ Success ++
+-->assignsubmission_file
+++ Success ++
+-->assignsubmission_mahara
+++ Success ++
+-->assignsubmission_onenote
+++ Success ++
+-->assignsubmission_onlineaudio
+++ Success ++
+-->assignsubmission_onlinetext
+++ Success ++
+-->assignsubmission_qmcw_coversheet
+++ Success ++
+-->assignfeedback_comments
+++ Success ++
+-->assignfeedback_editpdf
+++ Success ++
+-->assignfeedback_file
+++ Success ++
+-->assignfeedback_offline
+++ Success ++
+-->assignfeedback_onenote
+++ Success ++
+-->assignment_offline
+++ Success ++
+-->assignment_online
+++ Success ++
+-->assignment_upload
+++ Success ++
+-->assignment_uploadsingle
+++ Success ++
+-->booktool_exportimscp
+++ Success ++
+-->booktool_importhtml
+++ Success ++
+-->booktool_print
+++ Success ++
+-->datafield_checkbox
+++ Success ++
+-->datafield_date
+++ Success ++
+-->datafield_file
+++ Success ++
+-->datafield_latlong
+++ Success ++
+-->datafield_menu
+++ Success ++
+-->datafield_multimenu
+++ Success ++
+-->datafield_number
+++ Success ++
+-->datafield_picture
+++ Success ++
+-->datafield_radiobutton
+++ Success ++
+-->datafield_text
+++ Success ++
+-->datafield_textarea
+++ Success ++
+-->datafield_url
+++ Success ++
+-->datapreset_imagegallery
+++ Success ++
+-->forumngfeature_copy
+++ Success ++
+-->forumngfeature_delete
+++ Success ++
+-->forumngfeature_deletedposts
+++ Success ++
+-->forumngfeature_edittags
+++ Success ++
+-->forumngfeature_export
+++ Success ++
+-->forumngfeature_flagdiscussion
+++ Success ++
+-->forumngfeature_forward
+++ Success ++
+-->forumngfeature_lock
+++ Success ++
+-->forumngfeature_manualmark
+++ Success ++
+-->forumngfeature_markallread
+++ Success ++
+-->forumngfeature_markdiscussionread
+++ Success ++
+-->forumngfeature_merge
+++ Success ++
+-->forumngfeature_move
+++ Success ++
+-->forumngfeature_options
+++ Success ++
+-->forumngfeature_print
+++ Success ++
+-->forumngfeature_sticky
+++ Success ++
+-->forumngfeature_usage
+++ Success ++
+-->forumngfeature_userposts
+++ Success ++
+-->forumngtype_clone
+++ Success ++
+-->forumngtype_general
+++ Success ++
+-->forumngtype_ipud
+++ Success ++
+-->forumngtype_studyadvice
+++ Success ++
+-->ltiservice_gradebookservices
+++ Success ++
+-->ltiservice_memberships
+++ Success ++
+-->ltiservice_profile
+++ Success ++
+-->ltiservice_toolproxy
+++ Success ++
+-->ltiservice_toolsettings
+++ Success ++
+-->quiz_grading
+++ Success ++
+-->quiz_overview
+++ Success ++
+-->quiz_responses
+++ Success ++
+-->quiz_statistics
+++ Success ++
+-->quizaccess_delaybetweenattempts
+++ Success ++
+-->quizaccess_honestycheck
+++ Success ++
+-->quizaccess_ipaddress
+++ Success ++
+-->quizaccess_numattempts
+++ Success ++
+-->quizaccess_offlineattempts
+++ Success ++
+-->quizaccess_openclosedate
+++ Success ++
+-->quizaccess_password
+++ Success ++
+-->quizaccess_safebrowser
+++ Success ++
+-->quizaccess_securewindow
+++ Success ++
+-->quizaccess_timelimit
+++ Success ++
+-->scormreport_basic
+++ Success ++
+-->scormreport_graphs
+++ Success ++
+-->scormreport_interactions
+++ Success ++
+-->scormreport_objectives
+++ Success ++
+-->workshopform_accumulative
+++ Success ++
+-->workshopform_comments
+++ Success ++
+-->workshopform_numerrors
+++ Success ++
+-->workshopform_rubric
+++ Success ++
+-->workshopallocation_manual
+++ Success ++
+-->workshopallocation_random
+++ Success ++
+-->workshopallocation_scheduled
+++ Success ++
+-->workshopeval_best
+++ Success ++
+-->atto_accessibilitychecker
+++ Success ++
+-->atto_accessibilityhelper
+++ Success ++
+-->atto_align
+++ Success ++
+-->atto_backcolor
+++ Success ++
+-->atto_bold
+++ Success ++
+-->atto_charmap
+++ Success ++
+-->atto_chemistry
+++ Success ++
+-->atto_clear
+++ Success ++
+-->atto_collapse
+++ Success ++
+-->atto_computing
+++ Success ++
+-->atto_easychem
+++ Success ++
+-->atto_echo360attoplugin
+++ Success ++
+-->atto_emoticon
+++ Success ++
+-->atto_equation
+++ Success ++
+-->atto_fontcolor
+++ Success ++
+-->atto_fontfamily
+++ Success ++
+-->atto_fontsize
+++ Success ++
+-->atto_fullscreen
+++ Success ++
+-->atto_html
+++ Success ++
+-->atto_htmlplus
+++ Success ++
+-->atto_image
+++ Success ++
+-->atto_indent
+++ Success ++
+-->atto_italic
+++ Success ++
+-->atto_kalturamedia
+++ Success ++
+-->atto_link
+++ Success ++
+-->atto_managefiles
+++ Success ++
+-->atto_mathslate
+++ Success ++
+-->atto_media
+++ Success ++
+-->atto_morefontcolors
+++ Success ++
+-->atto_noautolink
+++ Success ++
+-->atto_orderedlist
+++ Success ++
+-->atto_qmulblockquote
+++ Success ++
+-->atto_qmulcite
+++ Success ++
+-->atto_qmulcolumns
+++ Success ++
+-->atto_qmulicons
+++ Success ++
+-->atto_qmultexthighlight
+++ Success ++
+-->atto_qmultitle
+++ Success ++
+-->atto_recordrtc
+++ Success ++
+-->atto_rtl
+++ Success ++
+-->atto_snippet
+++ Success ++
+-->atto_strike
+++ Success ++
+-->atto_subscript
+++ Success ++
+-->atto_superscript
+++ Success ++
+-->atto_table
+++ Success ++
+-->atto_title
+++ Success ++
+-->atto_underline
+++ Success ++
+-->atto_undo
+++ Success ++
+-->atto_unorderedlist
+++ Success ++
+-->tinymce_ctrlhelp
+++ Success ++
+-->tinymce_kalturamedia
+++ Success ++
+-->tinymce_managefiles
+++ Success ++
+-->tinymce_mathslate
+++ Success ++
+-->tinymce_moodleemoticon
+++ Success ++
+-->tinymce_moodleimage
+++ Success ++
+-->tinymce_moodlemedia
+++ Success ++
+-->tinymce_moodlenolink
+++ Success ++
+-->tinymce_pdw
+++ Success ++
+-->tinymce_spellchecker
+++ Success ++
+-->tinymce_wrap
+++ Success ++
+-->logstore_database
+++ Success ++
+-->logstore_legacy
+++ Success ++
+-->logstore_standard
+++ Success ++
+-->local_activitytodo
+++ Success ++
+-->local_anonymousposting
+++ Success ++
+-->local_bulkactions
+++ Success ++
+-->local_course_backup
+++ Success ++
+-->local_course_creation_wizard
+++ Success ++
+-->local_kaltura
+++ Success ++
+-->local_kalturamediagallery
+++ Success ++
+-->local_landingpages
+++ Success ++
+-->local_mass_enroll
+++ Success ++
+-->local_mobile
+++ Success ++
+-->local_msaccount
+++ Success ++
+-->local_mymedia
+++ Success ++
+-->local_o365
+++ Success ++
+-->local_office365
+++ Success ++
+-->local_onenote
+++ Success ++
+-->local_orphan2stealth
+++ Success ++
+-->local_pearson
+++ Success ++
+-->local_physicsapp
+++ Success ++
+-->local_qm_activities
+++ Success ++
+-->local_qmcw_coversheet
+++ Success ++
+-->local_qmframework
+++ Success ++
+-->local_qmul_download_submissions
+++ Success ++
+-->local_qmul_messaging
+++ Success ++
+-->local_qsection
+++ Success ++
+-->local_rollover_plugin
+++ Success ++
+-->local_sandbox
+++ Success ++
+-->local_simple_course_creator
+++ Success ++
+-->local_tabtransformer
+++ Success ++
+-->local_widgets
+++ Success ++
+-->local_xp
+++ Success ++
+-->widgettype_activitytodo
+++ Success ++
+-->widgettype_assignments
+++ Success ++
+-->widgettype_helloworld
+++ Success ++
+-->widgettype_qmulmessaging
+++ Success ++
+-->widgettype_timetable
+++ Success ++
+-->widgettype_upcoming
+++ Success ++
+Error reading from database
+Error reading from database
+Error reading from database
+Error reading from database
+Acceptance tests site installed
+Acceptance tests environment enabled on http://webserver, to run the tests use: 
+vendor/bin/behat --config /var/www/behatdata/behatrun/behat/behat.yml
+Behat testing up and ready for tests
