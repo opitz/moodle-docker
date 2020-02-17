@@ -9,7 +9,7 @@ export MOODLE_DOCKER_SELENIUM_VNC_PORT=5900
 export MOODLE_DOCKER_PHP_VERSION=7.1
 
 # get options
-while getopts ":fhlnp:t:w:" x; do
+while getopts ":fhlnp:t:vw:" x; do
     case "${x}" in
         f)
             feature=1
@@ -28,6 +28,9 @@ while getopts ":fhlnp:t:w:" x; do
             ;;
     	t)  
             theme=${OPTARG}
+	       ;;
+    	v)  
+            verbose=1
 	       ;;
     	w)  
             webroot=${OPTARG}
@@ -149,15 +152,51 @@ behat_stop() {
 }
 
 list_scenarios() {
-	docker exec moodledocker_webserver_1 vendor/bin/behat --format=moodle_list --dry-run --config /var/www/behatdata/behatrun/behat/behat.yml --tags=@$1 > tmp/scenarios_raw
+	rm -f tmp/scenarios_raw
+	# when there are parallel runs do it a bit different
+	if [ -f tmp/parallels.txt ]; then
+		parallels=$(cat tmp/parallels.txt)
+		counter=1
+		while [ $counter -le $((parallels)) ]; do
+			docker exec moodledocker_webserver_1 vendor/bin/behat --format=moodle_list --dry-run --config /var/www/behatdata/behatrun$counter/behat/behat.yml --tags=@$1 >> tmp/scenarios_raw
+			((counter++))
+		done
+	else
+		docker exec moodledocker_webserver_1 vendor/bin/behat --format=moodle_list --dry-run --config /var/www/behatdata/behatrun/behat/behat.yml --tags=@$1 > tmp/scenarios_raw
+	fi
 	counter=0
 	while IFS= read -r line; do
 		((counter=$counter+1))
 		line=${line/html/moodle}
 		IFS=':' read -r -a array <<< "$line"
 		title=$(sed ${array[1]}'!d' ${array[0]})
-		echo "$counter: $line => ${title}"
+		if [ ! -z ${verbose+x} ]; then
+			echo "$counter: $line => ${title}"
+		else
+			echo "${title}"
+		fi
 	done < tmp/scenarios_raw
+}
+
+show_status() {
+	echo "Behat Test Status"
+	if [ ! -f tmp/webroot.txt ]; then
+		echo "Behat tests not configured (no webroot set)!"
+		exit 1
+	else
+		webroot=$(cat tmp/webroot.txt)
+	fi
+	if [ -f tmp/parallels.txt ]; then
+		parallels=$(cat tmp/parallels.txt)
+	else
+		parallels=1
+	fi
+	if [ $((parallels)) -gt 1 ]; then
+		echo "==> $parallels parallel tests configured for webroot $webroot"
+	else
+		echo "==> Tests configured for webroot $webroot"
+	fi
+	exit 1
 }
 
 if [ ! -z ${help+x} ]; then
@@ -203,6 +242,11 @@ then
 	behat_init $3 $4
 	echo "==> Behat testing up and ready for tests"
 	exit 1
+fi
+
+if [[ $1 == 'status' ]]
+then 
+	show_status
 fi
 
 if [[ $1 == 'stop' ]]
