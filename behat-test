@@ -180,22 +180,35 @@ list_scenarios() {
 
 show_status() {
 	echo "Behat Test Status"
+	
 	if [ ! -f tmp/webroot.txt ]; then
 		echo "Behat tests not configured (no webroot set)!"
 		exit 1
 	else
 		webroot=$(cat tmp/webroot.txt)
 	fi
+	
 	if [ -f tmp/parallels.txt ]; then
 		parallels=$(cat tmp/parallels.txt)
 	else
 		parallels=1
 	fi
-	if [ $((parallels)) -gt 1 ]; then
-		echo "==> $parallels parallel tests configured for webroot $webroot"
+
+	if [ -f tmp/theme.txt ]; then
+		theme=$(cat tmp/theme.txt)
+		if [ $((parallels)) -gt 1 ]; then
+			echo "==> $parallels parallel tests configured for webroot $webroot running theme $theme"
+		else
+			echo "==> Tests configured for webroot $webroot running theme $theme"
+		fi
 	else
-		echo "==> Tests configured for webroot $webroot"
+		if [ $((parallels)) -gt 1 ]; then
+			echo "==> $parallels parallel tests configured for webroot $webroot"
+		else
+			echo "==> Tests configured for webroot $webroot"
+		fi
 	fi
+
 	exit 1
 }
 
@@ -269,22 +282,33 @@ if [[ $1 == '' ]]; then
 	# Indeed running all tests - this will run for hours!
 	bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php
 else
-	if [ ! -z ${feature+x} ]; then
-		echo "==> Testing single feature $1"
-		bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --feature=/var/www/html/$1
-	elif [ ! -z ${name+x} ]; then
-		echo "==> Testing single scenario $1"
-		bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --name="$1"
-	elif [ ! -z ${list+x} ]; then
-		echo "==> List of scenarios for $1"
-		list_scenarios $1
-	else
-		if [[ -f tmp/theme.txt ]]; then
-			theme=$(cat tmp/theme.txt)
-			echo "==> Testing plug in $1 with theme '$theme'"
-			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --tags=@$1 --suite="$theme"
+	if [[ -f tmp/theme.txt ]]; then
+		theme=$(cat tmp/theme.txt)
+		if [ ! -z ${feature+x} ]; then
+			echo "==> Testing single feature '$1' with theme '$theme'"
+			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --feature=/var/www/html/$1 --suite="$theme"
+		elif [ ! -z ${name+x} ]; then
+			echo "==> Testing single scenario '$1' with theme '$theme'"
+			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --name="$1" --suite="$theme"
+		elif [ ! -z ${list+x} ]; then
+			echo "==> List of scenarios for $1"
+			list_scenarios $1
 		else
-			echo "==> Testing plug in $1"
+			echo "==> Testing plug in '$1' with theme '$theme'"
+			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --tags=@$1 --suite="$theme"
+		fi
+	else
+		if [ ! -z ${feature+x} ]; then
+			echo "==> Testing single feature '$1'"
+			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --feature=/var/www/html/$1
+		elif [ ! -z ${name+x} ]; then
+			echo "==> Testing single scenario '$1'"
+			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --name="$1"
+		elif [ ! -z ${list+x} ]; then
+			echo "==> List of scenarios for $1"
+			list_scenarios $1
+		else
+			echo "==> Testing plug in '$1'"
 			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --tags=@$1
 		fi
 	fi
