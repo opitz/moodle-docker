@@ -55,6 +55,8 @@ $CFG->behat_profiles = array(
     ),
 );
 $CFG->behat_faildump_path = '/var/www/behatfaildumps';
+// uncomment this to threefold the timeout period
+//$CFG->behat_increasetimeout = 3;
 
 define('PHPUNIT_LONGTEST', true);
 

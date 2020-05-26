@@ -3,10 +3,10 @@
 version=1.0
 
 #export MOODLE_DOCKER_WWWROOT=$1
-#export MOODLE_DOCKER_DB=mysql
-export MOODLE_DOCKER_DB=pgsql
+export MOODLE_DOCKER_DB=mysql
+#export MOODLE_DOCKER_DB=pgsql
 export MOODLE_DOCKER_SELENIUM_VNC_PORT=5900
-export MOODLE_DOCKER_PHP_VERSION=7.1
+export MOODLE_DOCKER_PHP_VERSION=7.2
 
 # get options
 while getopts ":fhlnp:t:vw:" x; do
@@ -151,18 +151,18 @@ behat_stop() {
 	exit 1
 }
 
-list_scenarios() {
+list_scenarios_OLD() {
 	rm -f tmp/scenarios_raw
 	# when there are parallel runs do it a bit different
 	if [ -f tmp/parallels.txt ]; then
 		parallels=$(cat tmp/parallels.txt)
 		counter=1
 		while [ $counter -le $((parallels)) ]; do
-			docker exec moodledocker_webserver_1 vendor/bin/behat --format=moodle_list --dry-run --config /var/www/behatdata/behatrun$counter/behat/behat.yml --tags=@$1 >> tmp/scenarios_raw
+			docker exec moodle-docker_webserver_1 vendor/bin/behat --format=moodle_list --dry-run --config /var/www/behatdata/behatrun$counter/behat/behat.yml --tags=@$1 >> tmp/scenarios_raw
 			((counter++))
 		done
 	else
-		docker exec moodledocker_webserver_1 vendor/bin/behat --format=moodle_list --dry-run --config /var/www/behatdata/behatrun/behat/behat.yml --tags=@$1 > tmp/scenarios_raw
+		docker exec moodle-docker_webserver_1 vendor/bin/behat --format=moodle_list --dry-run --config /var/www/behatdata/behatrun/behat/behat.yml --tags=@$1 > tmp/scenarios_raw
 	fi
 	counter=0
 	while IFS= read -r line; do
@@ -176,6 +176,10 @@ list_scenarios() {
 			echo "${title}"
 		fi
 	done < tmp/scenarios_raw
+}
+
+list_scenarios() {
+	bin/moodle-docker-compose exec -u www-data webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run --tags=@$1 | grep Scenario
 }
 
 show_status() {
@@ -281,10 +285,13 @@ if [[ $1 == '' ]]; then
 	fi
 	# Indeed running all tests - this will run for hours!
 	bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php
-else
+else # check if a theme is set
 	if [[ -f tmp/theme.txt ]]; then
 		theme=$(cat tmp/theme.txt)
-		if [ ! -z ${feature+x} ]; then
+		if [[ $2 == 'dry-run' ]]; then
+	        	echo "==> this is a dry run!"
+        	#	bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --feature=/var/www/html/$1
+		elif [ ! -z ${feature+x} ]; then
 			echo "==> Testing single feature '$1' with theme '$theme'"
 			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --feature=/var/www/html/$1 --suite="$theme"
 		elif [ ! -z ${name+x} ]; then
@@ -298,7 +305,10 @@ else
 			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --tags=@$1 --suite="$theme"
 		fi
 	else
-		if [ ! -z ${feature+x} ]; then
+		if [[ $2 == 'dry-run' ]]; then
+		        echo "==> this is a dry run!"
+		        bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run --feature=/var/www/html/$1
+		elif [ ! -z ${feature+x} ]; then
 			echo "==> Testing single feature '$1'"
 			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --feature=/var/www/html/$1
 		elif [ ! -z ${name+x} ]; then
