@@ -182,6 +182,10 @@ list_scenarios() {
 	bin/moodle-docker-compose exec -u www-data webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run --tags=@$1 | grep Scenario
 }
 
+list_scenarios_verbose() {
+	bin/moodle-docker-compose exec -u www-data webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run --tags=@$1
+}
+
 show_status() {
 	echo "Behat Test Status"
 	
@@ -298,8 +302,13 @@ else # check if a theme is set
 			echo "==> Testing single scenario '$1' with theme '$theme'"
 			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --name="$1" --suite="$theme"
 		elif [ ! -z ${list+x} ]; then
-			echo "==> List of scenarios for $1"
-			list_scenarios $1
+			if [[ $verbose ]]; then
+				echo "==> Verbose list of scenarios and tests for $1"
+				list_scenarios_verbose $1
+			else
+				echo "==> List of scenarios for $1"
+				list_scenarios $1
+			fi
 		else
 			echo "==> Testing plug in '$1' with theme '$theme'"
 			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --tags=@$1 --suite="$theme"
@@ -315,8 +324,13 @@ else # check if a theme is set
 			echo "==> Testing single scenario '$1'"
 			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --name="$1"
 		elif [ ! -z ${list+x} ]; then
-			echo "==> List of scenarios for $1"
-			list_scenarios $1
+			if [[ $verbose ]]; then
+				echo "==> Verbose list of scenarios and tests for $1"
+				list_scenarios_verbose $1
+			else
+				echo "==> List of scenarios for $1"
+				list_scenarios $1
+			fi
 		else
 			echo "==> Testing plug in '$1'"
 			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --tags=@$1
