@@ -300,7 +300,7 @@ if [[ $1 == 'ALL' ]]; then
 			bin/moodle-docker-compose exec -u www-data webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run | grep Scenario
 		else
 			echo "==> List of ALL scenarios and tests"
-			bin/moodle-docker-compose exec -u www-data webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run
+			bin/moodle-docker-compose exec -u www-data webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run | grep Scenario
 		fi
 		exit 1
 	fi
