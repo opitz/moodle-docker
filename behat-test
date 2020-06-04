@@ -44,21 +44,26 @@ shift $((OPTIND-1))
 
 
 usage() {
+	echo
 	echo "ERROR! Missing parameter."
-	echo "usage: behat-test <path/to/moodlecode> [<tags>]"
+	echo
+	help
 	exit 1
 }
 
 help() {
-	echo "Usage: $0 something here...." 1>&2; 
+	echo "Usage:	$0 [options] <tag>" 1>&2; 
+	echo "	$0 ALL will run a complete test. It will run for hours!"
 	echo
-	echo "available options:"
-	echo "-f: argument is a relative URI to a feature file to test"
-	echo "-h this help page"
-	echo "-n: argument is a name of a scenario to test"
-	echo "-p <parallels>: set number of parallel tests when initializing"
-	echo "-t <themename>: set theme for tests when initializing"
-	echo "-w <webroot>: set the path to the webroot directory to test"
+	echo "available options are:"
+	echo "-l: list - list all scenarios of the given tag"
+	echo "-v in combination with -l: verbose - list all scenarios and all tests for the given tag"
+	echo "-f: feature - argument is a relative URI to a feature file to test"
+	echo "-h: help - this help page"
+	echo "-n: name - argument is a name or part of a name of a scenario to test"
+	echo "-p <number>: parallel - set number of parallel tests when initializing"
+	echo "-t <themename>: theme - set theme for tests when initializing"
+	echo "-w <webroot>: webroot - set the path to the webroot directory to test"
 	echo
 	exit 1;
 }
@@ -72,7 +77,7 @@ behat_up() {
 		read -p "Enter the absolute path to webroot: " webroot
 		echo    # (optional) move to a new line
 	fi
-echo "writing txt"
+	echo "==> writing webroot path to tmp/webroot.txt"
 	echo $webroot > tmp/webroot.txt
 
 #	webroot=$(cat tmp/webroot.txt)
@@ -278,8 +283,9 @@ fi
 get_webroot
 
 # Run behat tests
-if [[ $1 == '' ]]; then
+if [[ $1 == 'ALL' ]]; then
 	# No test specified - so running ALL tests?!
+	echo
 	read -p "This will run for a VERY long time! Are you sure to test the complete system? (y/N) " -n 1 -r
 	echo    # (optional) move to a new line
 	if [[ ! $REPLY =~ ^[Yy]$ ]]
@@ -287,8 +293,28 @@ if [[ $1 == '' ]]; then
 		echo "Aborting..."
 	    exit 1
 	fi
+	# Check for options
+	if [[ $list ]]; then
+		if [[ $verbose ]]; then
+			echo "==> Verbose list of ALL scenarios and tests"
+			bin/moodle-docker-compose exec -u www-data webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run | grep Scenario
+		else
+			echo "==> List of ALL scenarios and tests"
+			bin/moodle-docker-compose exec -u www-data webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run
+		fi
+		exit 1
+	fi
+
 	# Indeed running all tests - this will run for hours!
-	bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php
+	# Check is a theme is set
+	if [[ -f tmp/theme.txt ]]; then
+		echo "==> FULL Test with theme '$theme'"
+		theme=$(cat tmp/theme.txt)
+		bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --suite="$theme"
+	else
+		bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php
+	fi
+
 else # check if a theme is set
 	if [[ -f tmp/theme.txt ]]; then
 		theme=$(cat tmp/theme.txt)
