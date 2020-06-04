@@ -297,7 +297,7 @@ if [[ $1 == 'ALL' ]]; then
 	if [[ $list ]]; then
 		if [[ $verbose ]]; then
 			echo "==> Verbose list of ALL scenarios and tests"
-			bin/moodle-docker-compose exec -u www-data webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run | grep Scenario
+			bin/moodle-docker-compose exec -u www-data webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run
 		else
 			echo "==> List of ALL scenarios and tests"
 			bin/moodle-docker-compose exec -u www-data webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run | grep Scenario
