@@ -295,13 +295,13 @@ if [[ $1 == 'ALL' ]]; then
 	fi
 	# Check for options
 	if [[ $list ]]; then
-		if [[ $verbose ]]; then
-			echo "==> Verbose list of ALL scenarios and tests"
-			bin/moodle-docker-compose exec -u www-data webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run
-		else
-			echo "==> List of ALL scenarios and tests"
-			bin/moodle-docker-compose exec -u www-data webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run | grep Scenario
-		fi
+		echo "==> List of ALL scenarios and tests"
+		bin/moodle-docker-compose exec -u www-data webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run | grep Scenario
+		exit 1
+	fi
+	if [[ $verbose ]]; then
+		echo "==> Verbose list of ALL scenarios and tests"
+		bin/moodle-docker-compose exec -u www-data webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run
 		exit 1
 	fi
 
@@ -325,8 +325,16 @@ else # check if a theme is set
 			echo "==> Testing single feature '$1' with theme '$theme'"
 			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --feature=/var/www/html/$1 --suite="$theme"
 		elif [ ! -z ${name+x} ]; then
-			echo "==> Testing single scenario '$1' with theme '$theme'"
-			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --name="$1" --suite="$theme"
+			if [[ $list ]]; then
+				echo "==> List scenarios with '$1' using theme '$theme'"
+				bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run --name="$1" --suite="$theme" | grep Scenario
+			elif [[ $verbose ]]; then
+				echo "==> List scenarios and tests with '$1' using theme '$theme'"
+				bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run --name="$1" --suite="$theme"
+			else
+				echo "==> Testing scenario with '$1' using theme '$theme'"
+				bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --name="$1" --suite="$theme"
+			fi
 		elif [ ! -z ${list+x} ]; then
 			if [[ $verbose ]]; then
 				echo "==> Verbose list of scenarios and tests for $1"
@@ -347,8 +355,16 @@ else # check if a theme is set
 			echo "==> Testing single feature '$1'"
 			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --feature=/var/www/html/$1
 		elif [ ! -z ${name+x} ]; then
-			echo "==> Testing single scenario '$1'"
-			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --name="$1"
+			if [[ $list ]]; then
+				echo "==> List scenarios with '$1'"
+				bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run --name="$1" | grep Scenario
+			elif [[ $list ]]; then
+				echo "==> List scenarios and tests with '$1'"
+				bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run --name="$1"
+			else
+				echo "==> Test scenarios with '$1'"
+				bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --name="$1"
+			fi
 		elif [ ! -z ${list+x} ]; then
 			if [[ $verbose ]]; then
 				echo "==> Verbose list of scenarios and tests for $1"
