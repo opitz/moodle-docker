@@ -134,8 +134,13 @@ behat_init() {
 			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/init.php --parallel=$parallels
 		fi
 	else
-		echo "Initializing behat testing for a single run"
-		bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/init.php
+		if [ ! -z ${theme+x} ]; then
+			echo "Initializing behat testing for a single run with theme $theme"
+			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/init.php --add-core-features-to-theme="$theme"
+		else
+			echo "Initializing behat testing for a single run"
+			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/init.php
+		fi
 	fi
 }
 
