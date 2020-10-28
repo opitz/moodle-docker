@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-version=1.0
+version=1.5
 
 #export MOODLE_DOCKER_WWWROOT=$1
 export MOODLE_DOCKER_DB=mysql

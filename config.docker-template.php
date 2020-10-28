@@ -13,6 +13,8 @@ $CFG->dbpass    = getenv('MOODLE_DOCKER_DBPASS');
 $CFG->prefix    = 'm_';
 $CFG->dboptions = ['dbcollation' => getenv('MOODLE_DOCKER_DBCOLLATION')];
 
+$CFG->behat_increasetimeout = 2;
+
 $host = 'localhost';
 if (!empty(getenv('MOODLE_DOCKER_WEB_HOST'))) {
     $host = getenv('MOODLE_DOCKER_WEB_HOST');
