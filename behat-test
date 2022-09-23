@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-version=1.5
+version=1.6b
 
 #export MOODLE_DOCKER_WWWROOT=$1
-export MOODLE_DOCKER_DB=mysql
+export MOODLE_DOCKER_DB=mariadb
 #export MOODLE_DOCKER_DB=pgsql
 export MOODLE_DOCKER_SELENIUM_VNC_PORT=5900
-export MOODLE_DOCKER_PHP_VERSION=7.2
+export MOODLE_DOCKER_PHP_VERSION=7.4
 
 # get options
 while getopts ":fhlnp:t:vw:" x; do
@@ -26,13 +26,13 @@ while getopts ":fhlnp:t:vw:" x; do
         p)
             parallels=${OPTARG}
             ;;
-    	t)  
+    	t)
             theme=${OPTARG}
 	       ;;
-    	v)  
+    	v)
             verbose=1
 	       ;;
-    	w)  
+    	w)
             webroot=${OPTARG}
 	       ;;
         *)
@@ -52,7 +52,7 @@ usage() {
 }
 
 help() {
-	echo "Usage:	$0 [options] <tag>" 1>&2; 
+	echo "Usage:	$0 [options] <tag>" 1>&2;
 	echo "	$0 ALL will run a complete test. It will run for hours!"
 	echo
 	echo "available options are:"
@@ -198,14 +198,14 @@ list_scenarios_verbose() {
 
 show_status() {
 	echo "Behat Test Status"
-	
+
 	if [ ! -f tmp/webroot.txt ]; then
 		echo "Behat tests not configured (no webroot set)!"
 		exit 1
 	else
 		webroot=$(cat tmp/webroot.txt)
 	fi
-	
+
 	if [ -f tmp/parallels.txt ]; then
 		parallels=$(cat tmp/parallels.txt)
 	else
@@ -276,12 +276,12 @@ then
 fi
 
 if [[ $1 == 'status' ]]
-then 
+then
 	show_status
 fi
 
 if [[ $1 == 'stop' ]]
-then 
+then
 	behat_stop
 fi
 
@@ -380,6 +380,7 @@ else # check if a theme is set
 			fi
 		else
 			echo "==> Testing plug in '$1'"
+			echo "webserver = $webserver"
 			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --tags=@$1
 		fi
 	fi

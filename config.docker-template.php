@@ -13,8 +13,6 @@ $CFG->dbpass    = getenv('MOODLE_DOCKER_DBPASS');
 $CFG->prefix    = 'm_';
 $CFG->dboptions = ['dbcollation' => getenv('MOODLE_DOCKER_DBCOLLATION')];
 
-$CFG->behat_increasetimeout = 2;
-
 $host = 'localhost';
 if (!empty(getenv('MOODLE_DOCKER_WEB_HOST'))) {
     $host = getenv('MOODLE_DOCKER_WEB_HOST');
@@ -33,6 +31,7 @@ $CFG->dataroot  = '/var/www/moodledata';
 $CFG->admin     = 'admin';
 $CFG->directorypermissions = 0777;
 $CFG->smtphosts = 'mailhog:1025';
+$CFG->noreplyaddress = 'noreply@example.com';
 
 // Debug options - possible to be controlled by flag in future..
 $CFG->debug = (E_ALL | E_STRICT); // DEBUG_DEVELOPER
@@ -47,7 +46,8 @@ $CFG->pathtophp = '/usr/local/bin/php';
 
 $CFG->phpunit_dataroot  = '/var/www/phpunitdata';
 $CFG->phpunit_prefix = 't_';
-define('TEST_EXTERNAL_FILES_HTTP_URL', 'http://exttests');
+define('TEST_EXTERNAL_FILES_HTTP_URL', 'http://exttests:9000');
+define('TEST_EXTERNAL_FILES_HTTPS_URL', 'http://exttests:9000');
 
 $CFG->behat_wwwroot   = 'http://webserver';
 $CFG->behat_dataroot  = '/var/www/behatdata';
@@ -59,13 +59,13 @@ $CFG->behat_profiles = array(
     ),
 );
 $CFG->behat_faildump_path = '/var/www/behatfaildumps';
-// uncomment this to threefold the timeout period
-//$CFG->behat_increasetimeout = 3;
 
 define('PHPUNIT_LONGTEST', true);
 
 if (getenv('MOODLE_DOCKER_APP')) {
-    $CFG->behat_ionic_wwwroot = 'http://moodleapp:8100';
+    $appport = getenv('MOODLE_DOCKER_APP_PORT') ?: 8100;
+
+    $CFG->behat_ionic_wwwroot = "http://moodleapp:$appport";
 }
 
 if (getenv('MOODLE_DOCKER_PHPUNIT_EXTRAS')) {
