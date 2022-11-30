@@ -3,6 +3,46 @@
 
 This repository contains Docker configuration aimed at Moodle developers and testers to easily deploy a testing environment for Moodle.
 
+## Interlude: What is different?
+Most changes are purely for the convenience of the user. Instead of using the original Docker image provided by moodlehq a bespoke image qmulits/moodlehost is used that is closely related to the original but adds xdebug and mcrypt packages.
+
+To start behat testing cd into this directory and issue
+```bash
+  ./behat-test -w path/to/moodle start
+```
+This will start the docker containers and initialise the setup for the given moodle installation.
+To start parallel test runs use the option -p N where N is the number of parallel runs.
+```bash
+  ./behat-test -w path/to/moodle -p N start 
+```
+
+To initialise for a specific theme (must be part of the code of course) use
+```bash
+  ./behat-test -w path/to/moodle -p N -t <themename> start 
+```
+
+You may re-initialise an existing behat setup with another theme by issuing
+```bash
+  ./behat-test -w path/to/moodle -p N -t <themename> init 
+```
+
+## Testing
+
+To start a test issue
+```bash
+  ./behat-test <tag>
+```
+where a tag can be a distict plugin (e.g. "format_topics2") or a class of plugins ("local"). You can run it with tag "ALL" to test ALL of the Moodle instance - but beware that this will take a seriously long time!
+  
+To stop and delete all behat testing containers use
+```bash
+  ./behat-test stop
+```
+and confirm.
+
+Now back to the original Readme:
+
+----
 ## Features:
 * All supported database servers (PostgreSQL, MySQL, Micosoft SQL Server, Oracle XE)
 * Behat/Selenium configuration for Firefox and Chrome
