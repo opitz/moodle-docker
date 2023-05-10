@@ -4,7 +4,10 @@
 This repository contains Docker configuration aimed at Moodle developers and testers to easily deploy a testing environment for Moodle.
 
 ## Interlude: What is different?
-Most changes are purely for the convenience of the user. Instead of using the original Docker image provided by moodlehq a bespoke image qmulits/moodlehost is used that is closely related to the original but adds xdebug and mcrypt packages.
+All changes are purely for the convenience of the user.
+
+Two scripts will allow to set up and run Behat and PHPUnit tests with one command instead of using the rather complex original process (see original Readme after this interlude).
+The resulting testing environment will otherwise be identical.
 
 To start behat testing cd into this directory and issue
 ```bash
@@ -27,7 +30,7 @@ You may re-initialise an existing behat setup with another theme by issuing
 ```
 
 ## Testing
-
+### Behat tests
 To start a test issue
 ```bash
   ./behat-test <tag>
@@ -39,6 +42,14 @@ To stop and delete all behat testing containers use
   ./behat-test stop
 ```
 and confirm.
+
+### PHPUinit  tests
+For setting up and stopping PHPUnit tests follow the same process as for the Behat tests but replace "behat-test" with "phpunit-test"
+
+To start a test issue
+```bash
+  ./phpunit-test <relative/path/to/the/testfile.php>
+```
 
 Now back to the original Readme:
 
