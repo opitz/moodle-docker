@@ -9,7 +9,7 @@ export MOODLE_DOCKER_SELENIUM_VNC_PORT=5900
 export MOODLE_DOCKER_PHP_VERSION=8.0
 
 # get options
-while getopts ":fhlnp:t:vw:" x; do
+while getopts ":fhlnp:rt:vw:" x; do
     case "${x}" in
         f)
             feature=1
@@ -26,18 +26,21 @@ while getopts ":fhlnp:t:vw:" x; do
         p)
             parallels=${OPTARG}
             ;;
-    	t)
-            theme=${OPTARG}
-	       ;;
-    	v)
-            verbose=1
-	       ;;
-    	w)
-            webroot=${OPTARG}
-	       ;;
-        *)
-            usage
+        r)
+            rerun=1
             ;;
+        t)
+              theme=${OPTARG}
+           ;;
+        v)
+              verbose=1
+           ;;
+        w)
+              webroot=${OPTARG}
+           ;;
+        *)
+          usage
+          ;;
     esac
 done
 shift $((OPTIND-1))
@@ -62,6 +65,7 @@ help() {
 	echo "-h: help - this help page"
 	echo "-n: name - argument is a name or part of a name of a scenario to test"
 	echo "-p <number>: parallel - set number of parallel tests when initializing"
+	echo "-r: rerun - rerun failed tests only"
 	echo "-t <themename>: theme - set theme for tests when initializing"
 	echo "-w <webroot>: webroot - set the path to the webroot directory to test"
 	echo
@@ -379,12 +383,15 @@ else # check if a theme is set
 				list_scenarios $1
 			fi
 		else
-			echo "==> Testing plug in '$1'"
-			echo "webserver = $webserver"
-			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --tags=@$1
+		  if [[ $rerun ]]; then
+        echo "==> Re-runnig testing plugin '$1'"
+        bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --tags=@$1 --rerun
+      else
+        echo "==> Testing plugin '$1'"
+        bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --tags=@$1
+      fi
 		fi
 	fi
 fi
 
-echo "==> FIN"
-
+echo "==> FIN\n"

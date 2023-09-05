@@ -36,8 +36,13 @@ To start a test issue
   ./behat-test <tag>
 ```
 where a tag can be a distict plugin (e.g. "format_topics2") or a class of plugins ("local"). You can run it with tag "ALL" to test ALL of the Moodle instance - but beware that this will take a seriously long time!
-  
+
+To rerun a failed test issue
+```bash
+  ./behat-test -r <tag>
+```
 To stop and delete all behat testing containers use
+
 ```bash
   ./behat-test stop
 ```
