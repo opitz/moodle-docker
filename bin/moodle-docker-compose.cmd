@@ -64,11 +64,20 @@ IF "%MOODLE_DOCKER_APP_RUNTIME%"=="" (
     SET MOODLE_DOCKER_APP_RUNTIME=ionic5
 )
 
-IF "%MOODLE_DOCKER_BROWSER%"=="chrome" (
+REM Guess mobile app node version
+IF "%MOODLE_DOCKER_APP_NODE_VERSION%"=="" (
     IF NOT "%MOODLE_DOCKER_APP_PATH%"=="" (
-        SET DOCKERCOMPOSE=%DOCKERCOMPOSE% -f "%BASEDIR%\moodle-app-dev-%MOODLE_DOCKER_APP_RUNTIME%.yml"
-    ) ELSE IF NOT "%MOODLE_DOCKER_APP_VERSION%"=="" (
-        SET DOCKERCOMPOSE=%DOCKERCOMPOSE% -f "%BASEDIR%\moodle-app-%MOODLE_DOCKER_APP_RUNTIME%.yml"
+        IF "%MOODLE_DOCKER_APP_RUNTIME%"=="ionic5" (
+            SET filenvmrc=%MOODLE_DOCKER_APP_PATH%\.nvmrc
+            IF EXIST "%filenvmrc%" (
+                SET /p NODE_VERSION=< "%filenvmrc%"
+                SET NODE_VERSION=%NODE_VERSION:v=%
+                ECHO %NODE_VERSION% | FINDSTR /r "[0-9.]*" >nul 2>&1
+                IF ERRORLEVEL 0 (
+                    SET MOODLE_DOCKER_APP_NODE_VERSION=%NODE_VERSION%
+                )
+            )
+        )
     )
 )
 
@@ -93,12 +102,28 @@ IF "%MOODLE_DOCKER_BROWSER_TAG%"=="" (
        )
 )
 
+IF "%MOODLE_DOCKER_BROWSER_NAME%"=="chrome" (
+    IF NOT "%MOODLE_DOCKER_APP_PATH%"=="" (
+        SET DOCKERCOMPOSE=%DOCKERCOMPOSE% -f "%BASEDIR%\moodle-app-dev-%MOODLE_DOCKER_APP_RUNTIME%.yml"
+    ) ELSE IF NOT "%MOODLE_DOCKER_APP_VERSION%"=="" (
+        SET DOCKERCOMPOSE=%DOCKERCOMPOSE% -f "%BASEDIR%\moodle-app-%MOODLE_DOCKER_APP_RUNTIME%.yml"
+    )
+)
+
 IF NOT "%MOODLE_DOCKER_BROWSER_NAME%"=="firefox" (
        SET DOCKERCOMPOSE=%DOCKERCOMPOSE% -f "%BASEDIR%\selenium.%MOODLE_DOCKER_BROWSER_NAME%.yml"
 )
 
 IF NOT "%MOODLE_DOCKER_PHPUNIT_EXTERNAL_SERVICES%"=="" (
     SET DOCKERCOMPOSE=%DOCKERCOMPOSE% -f "%BASEDIR%\phpunit-external-services.yml"
+)
+
+IF NOT "%MOODLE_DOCKER_BBB_MOCK%"=="" (
+    SET DOCKERCOMPOSE=%DOCKERCOMPOSE% -f "%BASEDIR%\bbb-mock.yml"
+)
+
+IF NOT "%MOODLE_DOCKER_MATRIX_MOCK%"=="" (
+    SET DOCKERCOMPOSE=%DOCKERCOMPOSE% -f "%BASEDIR%\matrix-mock.yml"
 )
 
 IF NOT "%MOODLE_DOCKER_BEHAT_FAILDUMP%"=="" (
@@ -145,5 +170,13 @@ IF "%MOODLE_DOCKER_SELENIUM_VNC_PORT%"=="" (
 )
 
 echo %MOODLE_DOCKER_SELENIUM_SUFFIX% %MOODLE_DOCKER_BROWSER_TAG%
+
+REM Apply local customisations if a local.yml is found.
+REM Note: This must be the final modification before the docker-compose command is called.
+SET LOCALFILE=%BASEDIR%\local.yml
+IF EXIST %LOCALFILE% (
+    ECHO Including local options from %localfile%
+    SET DOCKERCOMPOSE=%DOCKERCOMPOSE% -f "%LOCALFILE%"
+)
 
 %DOCKERCOMPOSE% %*

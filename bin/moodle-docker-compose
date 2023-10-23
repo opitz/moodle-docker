@@ -112,15 +112,14 @@ then
     fi
 fi
 
-# Mobile app for development
-if [[ ! -z "$MOODLE_DOCKER_BROWSER" ]] && [[ "$MOODLE_DOCKER_BROWSER" == "chrome" ]] && [[ ! -z "$MOODLE_DOCKER_APP_PATH" ]];
+# Guess mobile app node version
+if [[ -z "$MOODLE_DOCKER_APP_NODE_VERSION" ]] && [[ ! -z "$MOODLE_DOCKER_APP_PATH" ]] && [[ "$MOODLE_DOCKER_APP_RUNTIME" == "ionic5" ]];
 then
-    dockercompose="${dockercompose} -f ${basedir}/moodle-app-dev-$MOODLE_DOCKER_APP_RUNTIME.yml"
+    if [ -f "$MOODLE_DOCKER_APP_PATH/.nvmrc" ]; then
+        appnodeversion="$(cat $MOODLE_DOCKER_APP_PATH/.nvmrc | grep -oP '(\d+\.?)+' || true)"
 
-# Mobile app using a docker image
-elif [[ ! -z "$MOODLE_DOCKER_BROWSER" ]] && [[ "$MOODLE_DOCKER_BROWSER" == "chrome" ]] && [[ ! -z "$MOODLE_DOCKER_APP_VERSION" ]];
-then
-    dockercompose="${dockercompose} -f ${basedir}/moodle-app-$MOODLE_DOCKER_APP_RUNTIME.yml"
+        export MOODLE_DOCKER_APP_NODE_VERSION="$appnodeversion"
+    fi
 fi
 
 # Selenium browser
@@ -141,6 +140,19 @@ then
     elif [[ "$MOODLE_DOCKER_BROWSER_NAME" = "chrome" ]];
     then
         MOODLE_DOCKER_BROWSER_TAG=3
+    fi
+fi
+
+# Mobile app for development
+if [[ "$MOODLE_DOCKER_BROWSER_NAME" == "chrome" ]];
+then
+    if [[ ! -z "$MOODLE_DOCKER_APP_PATH" ]];
+    then
+        dockercompose="${dockercompose} -f ${basedir}/moodle-app-dev-$MOODLE_DOCKER_APP_RUNTIME.yml"
+    elif [[ ! -z "$MOODLE_DOCKER_APP_VERSION" ]];
+    then
+        # Mobile app using a docker image
+        dockercompose="${dockercompose} -f ${basedir}/moodle-app-$MOODLE_DOCKER_APP_RUNTIME.yml"
     fi
 fi
 
@@ -166,6 +178,18 @@ fi
 if [[ ! -z "$MOODLE_DOCKER_PHPUNIT_EXTERNAL_SERVICES" ]];
 then
     dockercompose="${dockercompose} -f ${basedir}/phpunit-external-services.yml"
+fi
+
+# BBB Mock
+if [[ ! -z "$MOODLE_DOCKER_BBB_MOCK" ]];
+then
+    dockercompose="${dockercompose} -f ${basedir}/bbb-mock.yml"
+fi
+
+# Matrix Mock
+if [[ ! -z "$MOODLE_DOCKER_MATRIX_MOCK" ]];
+then
+    dockercompose="${dockercompose} -f ${basedir}/matrix-mock.yml"
 fi
 
 #  Faildump directory
@@ -201,5 +225,13 @@ if [[ "$(uname)" == "Darwin" ]]; then
     dockercompose="${dockercompose} -f ${basedir}/volumes-cached.yml"
 fi
 
+# Apply local customisations if a local.yml is found.
+# Note: This must be the final modification before the docker-compose command is called.
+localfile="${basedir}/local.yml"
+if [ -f "${localfile}" ]
+then
+  echo "Including local options from ${localfile}"
+  dockercompose="${dockercompose} -f ${localfile}"
+fi
 
 $dockercompose "$@"
