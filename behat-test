@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-version=1.6b
+version=1.6c
 
 #export MOODLE_DOCKER_WWWROOT=$1
-#export MOODLE_DOCKER_DB=mariadb
-export MOODLE_DOCKER_DB=pgsql
+export MOODLE_DOCKER_DB=mariadb
+#export MOODLE_DOCKER_DB=pgsql
 export MOODLE_DOCKER_SELENIUM_VNC_PORT=5900
 export MOODLE_DOCKER_PHP_VERSION=8.0
 
