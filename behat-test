@@ -1,0 +1,397 @@
+#!/usr/bin/env bash
+
+version=1.6c
+
+#export MOODLE_DOCKER_WWWROOT=$1
+export MOODLE_DOCKER_DB=mariadb
+#export MOODLE_DOCKER_DB=pgsql
+export MOODLE_DOCKER_SELENIUM_VNC_PORT=5900
+export MOODLE_DOCKER_PHP_VERSION=8.2
+
+# get options
+while getopts ":fhlnp:rt:vw:" x; do
+    case "${x}" in
+        f)
+            feature=1
+            ;;
+        h)
+            help=1
+            ;;
+        l)
+            list=1
+            ;;
+        n)
+            name=1
+            ;;
+        p)
+            parallels=${OPTARG}
+            ;;
+        r)
+            rerun=1
+            ;;
+        t)
+              theme=${OPTARG}
+           ;;
+        v)
+              verbose=1
+           ;;
+        w)
+              webroot=${OPTARG}
+           ;;
+        *)
+          usage
+          ;;
+    esac
+done
+shift $((OPTIND-1))
+
+
+usage() {
+	echo
+	echo "ERROR! Missing parameter."
+	echo
+	help
+	exit 1
+}
+
+help() {
+	echo "Usage:	$0 [options] <tag>" 1>&2;
+	echo "	$0 ALL will run a complete test. It will run for hours!"
+	echo
+	echo "available options are:"
+	echo "-l: list - list all scenarios of the given tag"
+	echo "-v in combination with -l: verbose - list all scenarios and all tests for the given tag"
+	echo "-f: feature - argument is a relative URI to a feature file to test"
+	echo "-h: help - this help page"
+	echo "-n: name - argument is a name or part of a name of a scenario to test"
+	echo "-p <number>: parallel - set number of parallel tests when initializing"
+	echo "-r: rerun - rerun failed tests only"
+	echo "-t <themename>: theme - set theme for tests when initializing"
+	echo "-w <webroot>: webroot - set the path to the webroot directory to test"
+	echo
+	exit 1;
+}
+
+behat_up() {
+	rm -rf tmp
+	mkdir tmp
+
+	# Ask for the path to webroot if not already given as option
+	if [ -z ${webroot+x} ]; then
+		read -p "Enter the absolute path to webroot: " webroot
+		echo    # (optional) move to a new line
+	fi
+	echo "==> writing webroot path to tmp/webroot.txt"
+	echo $webroot > tmp/webroot.txt
+
+#	webroot=$(cat tmp/webroot.txt)
+	if [ ! -d $webroot ]; then
+		echo "webroot path does not exist - aborting...!"
+		exit 1
+	fi
+	export MOODLE_DOCKER_WWWROOT=$webroot
+
+	bin/moodle-docker-compose up -d
+	bin/moodle-docker-wait-for-db
+}
+
+get_webroot() {
+	if [ ! -f tmp/webroot.txt ]; then
+		read -p "Enter the absolute path to webroot: " webroot
+		echo    # (optional) move to a new line
+	else
+		webroot=$(cat tmp/webroot.txt)
+	fi
+	# and check it
+	if [ ! -d $webroot ]; then
+		echo "webroot path does not exist - aborting...!"
+		exit 1
+	fi
+	export MOODLE_DOCKER_WWWROOT=$webroot
+}
+
+behat_init() {
+	# get webroot
+	get_webroot
+
+	# parallels
+	if [ ! -z ${parallels+x} ]; then
+		echo $parallels > tmp/parallels.txt
+	else
+		rm -f tmp/parallels.txt
+	fi
+
+	# check for a theme option
+	if [ ! -z ${theme+x} ]; then
+		echo $theme > tmp/theme.txt
+	else
+		rm -f tmp/theme.txt
+	fi
+
+
+	if [ ! -z ${parallels+x} ]; then
+		if [ ! -z ${theme+x} ]; then
+			echo "Initializing behat testing for $parallels parallel runs with theme $theme"
+			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/init.php --parallel=$parallels --add-core-features-to-theme="$theme"
+		else
+			echo "Initializing behat testing for $parallels parallel runs"
+			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/init.php --parallel=$parallels
+		fi
+	else
+		if [ ! -z ${theme+x} ]; then
+			echo "Initializing behat testing for a single run with theme $theme"
+			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/init.php --add-core-features-to-theme="$theme"
+		else
+			echo "Initializing behat testing for a single run"
+			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/init.php
+		fi
+	fi
+}
+
+behat_stop() {
+	read -p "Do you really want to stop and remove the testing environment (y/N) " -n 1 -r
+	echo    # (optional) move to a new line
+	if [[ $REPLY =~ ^[Yy]$ ]]
+	then
+		echo "Bye..."
+		# Shut down and destroy containers
+		webroot=$(cat tmp/webroot.txt)
+		export MOODLE_DOCKER_WWWROOT=$webroot
+		bin/moodle-docker-compose down
+		rm -rf tmp
+	else
+		echo "Aborting..."
+	fi
+	exit 1
+}
+
+list_scenarios_OLD() {
+	rm -f tmp/scenarios_raw
+	# when there are parallel runs do it a bit different
+	if [ -f tmp/parallels.txt ]; then
+		parallels=$(cat tmp/parallels.txt)
+		counter=1
+		while [ $counter -le $((parallels)) ]; do
+			docker exec moodle-docker_webserver_1 vendor/bin/behat --format=moodle_list --dry-run --config /var/www/behatdata/behatrun$counter/behat/behat.yml --tags=@$1 >> tmp/scenarios_raw
+			((counter++))
+		done
+	else
+		docker exec moodle-docker_webserver_1 vendor/bin/behat --format=moodle_list --dry-run --config /var/www/behatdata/behatrun/behat/behat.yml --tags=@$1 > tmp/scenarios_raw
+	fi
+	counter=0
+	while IFS= read -r line; do
+		((counter=$counter+1))
+		line=${line/html/moodle}
+		IFS=':' read -r -a array <<< "$line"
+		title=$(sed ${array[1]}'!d' ${array[0]})
+		if [ ! -z ${verbose+x} ]; then
+			echo "$counter: $line => ${title}"
+		else
+			echo "${title}"
+		fi
+	done < tmp/scenarios_raw
+}
+
+list_scenarios() {
+	bin/moodle-docker-compose exec -u www-data webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run --tags=@$1 | grep Scenario
+}
+
+list_scenarios_verbose() {
+	bin/moodle-docker-compose exec -u www-data webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run --tags=@$1
+}
+
+show_status() {
+	echo "Behat Test Status"
+
+	if [ ! -f tmp/webroot.txt ]; then
+		echo "Behat tests not configured (no webroot set)!"
+		exit 1
+	else
+		webroot=$(cat tmp/webroot.txt)
+	fi
+
+	if [ -f tmp/parallels.txt ]; then
+		parallels=$(cat tmp/parallels.txt)
+	else
+		parallels=1
+	fi
+
+	if [ -f tmp/theme.txt ]; then
+		theme=$(cat tmp/theme.txt)
+		if [ $((parallels)) -gt 1 ]; then
+			echo "==> $parallels parallel tests configured for webroot $webroot running theme $theme"
+		else
+			echo "==> Tests configured for webroot $webroot running theme $theme"
+		fi
+	else
+		if [ $((parallels)) -gt 1 ]; then
+			echo "==> $parallels parallel tests configured for webroot $webroot"
+		else
+			echo "==> Tests configured for webroot $webroot"
+		fi
+	fi
+
+	exit 1
+}
+
+if [ ! -z ${help+x} ]; then
+	help
+fi
+
+if [[ $1 == "?" ]]
+then
+	help
+fi
+
+if [[ $1 == "--help" ]]
+then
+	help
+fi
+
+if [[ $1 == "" ]]
+then
+	usage
+fi
+
+if [[ $1 == 'up' ]]
+then
+	echo "Bringing up testing environment"
+	behat_up
+	echo "==> Behat testing environment is up"
+	echo "==> You may now start a VNC client pointing at 0.0.0.0:5900 and enter the password 'secret'"
+	exit 1
+fi
+
+if [[ $1 == 'init' ]]
+then
+	echo "Initializing testing environment"
+	behat_init $3 $4
+	echo "==> Behat testing up and ready for tests"
+	exit 1
+fi
+
+if [[ $1 == 'start' ]]
+then
+	echo "Starting and initializing testing environment"
+	behat_up
+	behat_init $3 $4
+	echo "==> Behat testing up and ready for tests"
+	exit 1
+fi
+
+if [[ $1 == 'status' ]]
+then
+	show_status
+fi
+
+if [[ $1 == 'stop' ]]
+then
+	behat_stop
+fi
+
+get_webroot
+
+# Run behat tests
+if [[ $1 == 'ALL' ]]; then
+	# No test specified - so running ALL tests?!
+	echo
+	read -p "This will run for a VERY long time! Are you sure to test the complete system? (y/N) " -n 1 -r
+	echo    # (optional) move to a new line
+	if [[ ! $REPLY =~ ^[Yy]$ ]]
+	then
+		echo "Aborting..."
+	    exit 1
+	fi
+	# Check for options
+	if [[ $list ]]; then
+		echo "==> List of ALL scenarios and tests"
+		bin/moodle-docker-compose exec -u www-data webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run | grep Scenario
+		exit 1
+	fi
+	if [[ $verbose ]]; then
+		echo "==> Verbose list of ALL scenarios and tests"
+		bin/moodle-docker-compose exec -u www-data webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run
+		exit 1
+	fi
+
+	# Indeed running all tests - this will run for hours!
+	# Check is a theme is set
+	if [[ -f tmp/theme.txt ]]; then
+		echo "==> FULL Test with theme '$theme'"
+		theme=$(cat tmp/theme.txt)
+		bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --suite="$theme"
+	else
+		bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php
+	fi
+
+else # check if a theme is set
+	if [[ -f tmp/theme.txt ]]; then
+		theme=$(cat tmp/theme.txt)
+		if [[ $2 == 'dry-run' ]]; then
+	        	echo "==> this is a dry run!"
+        	#	bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --feature=/var/www/html/$1
+		elif [ ! -z ${feature+x} ]; then
+			echo "==> Testing single feature '$1' with theme '$theme'"
+			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --feature=/var/www/html/$1 --suite="$theme"
+		elif [ ! -z ${name+x} ]; then
+			if [[ $list ]]; then
+				echo "==> List scenarios with '$1' using theme '$theme'"
+				bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run --name="$1" --suite="$theme" | grep Scenario
+			elif [[ $verbose ]]; then
+				echo "==> List scenarios and tests with '$1' using theme '$theme'"
+				bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run --name="$1" --suite="$theme"
+			else
+				echo "==> Testing scenario with '$1' using theme '$theme'"
+				bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --name="$1" --suite="$theme"
+			fi
+		elif [ ! -z ${list+x} ]; then
+			if [[ $verbose ]]; then
+				echo "==> Verbose list of scenarios and tests for $1"
+				list_scenarios_verbose $1
+			else
+				echo "==> List of scenarios for $1"
+				list_scenarios $1
+			fi
+		else
+			echo "==> Testing plug in '$1' with theme '$theme'"
+			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --tags=@$1 --suite="$theme"
+		fi
+	else
+		if [[ $2 == 'dry-run' ]]; then
+		        echo "==> this is a dry run!"
+		        bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run --feature=/var/www/html/$1
+		elif [ ! -z ${feature+x} ]; then
+			echo "==> Testing single feature '$1'"
+			bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --feature=/var/www/html/$1
+		elif [ ! -z ${name+x} ]; then
+			if [[ $list ]]; then
+				echo "==> List scenarios with '$1'"
+				bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run --name="$1" | grep Scenario
+			elif [[ $list ]]; then
+				echo "==> List scenarios and tests with '$1'"
+				bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --format=pretty --dry-run --name="$1"
+			else
+				echo "==> Test scenarios with '$1'"
+				bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --name="$1"
+			fi
+		elif [ ! -z ${list+x} ]; then
+			if [[ $verbose ]]; then
+				echo "==> Verbose list of scenarios and tests for $1"
+				list_scenarios_verbose $1
+			else
+				echo "==> List of scenarios for $1"
+				list_scenarios $1
+			fi
+		else
+		  if [[ $rerun ]]; then
+        echo "==> Re-runnig testing plugin '$1'"
+        bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --tags=@$1 --rerun
+      else
+        echo "==> Testing plugin '$1'"
+        bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --tags=@$1
+      fi
+		fi
+	fi
+fi
+
+echo "==> FIN\n"
