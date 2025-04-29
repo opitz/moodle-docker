@@ -1,0 +1,197 @@
+#!/usr/bin/env bash
+
+version=1.6b
+
+#export MOODLE_DOCKER_WWWROOT=$1
+export MOODLE_DOCKER_DB=mariadb
+#export MOODLE_DOCKER_DB=pgsql
+export MOODLE_DOCKER_SELENIUM_VNC_PORT=5900
+export MOODLE_DOCKER_PHP_VERSION=8.2
+export MOODLE_DOCKER_DB_PORT=3608
+
+# get options
+while getopts ":fhlnp:t:vw:" x; do
+    case "${x}" in
+        f)
+            feature=1
+            ;;
+        h)
+            help=1
+            ;;
+        l)
+            list=1
+            ;;
+        n)
+            name=1
+            ;;
+        p)
+            parallels=${OPTARG}
+            ;;
+    	t)
+            theme=${OPTARG}
+	       ;;
+    	v)
+            verbose=1
+	       ;;
+    	w)
+            webroot=${OPTARG}
+	       ;;
+        *)
+            usage
+            ;;
+    esac
+done
+shift $((OPTIND-1))
+
+
+usage() {
+	echo
+	echo "ERROR! Missing parameter."
+	echo
+	help
+	exit 1
+}
+
+help() {
+	echo "Usage:	$0 [options] <tag>" 1>&2;
+	echo "	$0 ALL will run a complete test. It will run for hours!"
+	echo
+	echo "available options are:"
+	echo "-l: list - list all scenarios of the given tag"
+	echo "-v in combination with -l: verbose - list all scenarios and all tests for the given tag"
+	echo "-f: feature - argument is a relative URI to a feature file to test"
+	echo "-h: help - this help page"
+	echo "-n: name - argument is a name or part of a name of a scenario to test"
+	echo "-p <number>: parallel - set number of parallel tests when initializing"
+	echo "-t <themename>: theme - set theme for tests when initializing"
+	echo "-w <webroot>: webroot - set the path to the webroot directory to test"
+	echo
+	exit 1;
+}
+
+phpunit_up() {
+	rm -rf tmp
+	mkdir tmp
+
+	# Ask for the path to webroot if not already given as option
+	if [ -z ${webroot+x} ]; then
+		read -p "Enter the absolute path to webroot: " webroot
+		echo    # (optional) move to a new line
+	fi
+	echo "==> writing webroot path to tmp/webroot.txt"
+	echo $webroot > tmp/webroot.txt
+
+#	webroot=$(cat tmp/webroot.txt)
+	if [ ! -d $webroot ]; then
+		echo "webroot path does not exist - aborting...!"
+		exit 1
+	fi
+	export MOODLE_DOCKER_WWWROOT=$webroot
+
+	bin/moodle-docker-compose up -d
+	bin/moodle-docker-wait-for-db
+}
+
+get_webroot() {
+	if [ ! -f tmp/webroot.txt ]; then
+		read -p "Enter the absolute path to webroot: " webroot
+		echo    # (optional) move to a new line
+	else
+		webroot=$(cat tmp/webroot.txt)
+	fi
+	# and check it
+	if [ ! -d $webroot ]; then
+		echo "webroot path does not exist - aborting...!"
+		exit 1
+	fi
+	export MOODLE_DOCKER_WWWROOT=$webroot
+}
+
+phpunit_init() {
+	# get webroot
+	get_webroot
+
+	echo "Initializing phpunit testing for a single run"
+	bin/moodle-docker-compose exec webserver php admin/tool/phpunit/cli/init.php
+}
+
+phpunit_stop() {
+	read -p "Do you really want to stop and remove the testing environment (y/N) " -n 1 -r
+	echo    # (optional) move to a new line
+	if [[ $REPLY =~ ^[Yy]$ ]]
+	then
+		echo "Bye..."
+		# Shut down and destroy containers
+		webroot=$(cat tmp/webroot.txt)
+		export MOODLE_DOCKER_WWWROOT=$webroot
+		bin/moodle-docker-compose down
+		rm -rf tmp
+	else
+		echo "Aborting..."
+	fi
+	exit 1
+}
+
+if [ ! -z ${help+x} ]; then
+	help
+fi
+
+if [[ $1 == "?" ]]
+then
+	help
+fi
+
+if [[ $1 == "--help" ]]
+then
+	help
+fi
+
+if [[ $1 == "" ]]
+then
+	usage
+fi
+
+if [[ $1 == 'up' ]]
+then
+	echo "Bringing up testing environment"
+	phpunit_up
+	echo "==> PHPUnit testing environment is up"
+	echo "==> You may now start a VNC client pointing at 0.0.0.0:5900 and enter the password 'secret'"
+	exit 1
+fi
+
+if [[ $1 == 'init' ]]
+then
+	echo "Initializing testing environment"
+	phpunit_init $3 $4
+	echo "==> PHPUnit testing up and ready for tests"
+	exit 1
+fi
+
+if [[ $1 == 'start' ]]
+then
+	echo "Starting and initializing testing environment"
+	phpunit_up
+	phpunit_init $3 $4
+	echo "==> PHPUnit testing up and ready for tests"
+	exit 1
+fi
+
+if [[ $1 == 'status' ]]
+then
+	show_status
+fi
+
+if [[ $1 == 'stop' ]]
+then
+	phpunit_stop
+fi
+
+get_webroot
+
+# Run phpunit tests
+echo "==> Test scenarios with '$1'"
+#bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --name="$1"
+bin/moodle-docker-compose exec webserver vendor/bin/phpunit $1
+echo "==> FIN"
+

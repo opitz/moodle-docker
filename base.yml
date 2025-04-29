@@ -6,6 +6,8 @@ services:
     volumes:
       - "${MOODLE_DOCKER_WWWROOT}:/var/www/html"
       - "${ASSETDIR}/web/apache2_faildumps.conf:/etc/apache2/conf-enabled/moodle-faildump.conf"
+      - "${PWD}/config.docker-template.php:/var/www/html/config.php"
+      - "${MOODLE_DOCKER_WWWROOT}/behatfaildumps:/var/www/behatfaildumps"
     environment:
       MOODLE_DOCKER_RUNNING: 1
       MOODLE_DOCKER_DBNAME: moodle

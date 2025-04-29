@@ -3,6 +3,62 @@
 
 This repository contains Docker configuration aimed at Moodle developers and testers to easily deploy a testing environment for Moodle.
 
+## Interlude: What is different?
+All changes are purely for the convenience of the user.
+
+Two scripts will allow to set up and run Behat and PHPUnit tests with one command instead of using the rather complex original process (see original Readme after this interlude).
+The resulting testing environment will otherwise be identical.
+
+To start behat testing cd into this directory and issue
+```bash
+  ./behat-test -w path/to/moodle start
+```
+This will start the docker containers and initialise the setup for the given moodle installation.
+To start parallel test runs use the option -p N where N is the number of parallel runs.
+```bash
+  ./behat-test -w path/to/moodle -p N start 
+```
+
+To initialise for a specific theme (must be part of the code of course) use
+```bash
+  ./behat-test -w path/to/moodle -p N -t <themename> start 
+```
+
+You may re-initialise an existing behat setup with another theme by issuing
+```bash
+  ./behat-test -w path/to/moodle -p N -t <themename> init 
+```
+
+## Testing
+### Behat tests
+To start a test issue
+```bash
+  ./behat-test <tag>
+```
+where a tag can be a distinct plugin (e.g. "format_topics2") or a class of plugins ("local"). You can run it with tag "ALL" to test ALL of the Moodle instance - but beware that this will take a seriously long time!
+
+To rerun a failed test issue
+```bash
+  ./behat-test -r <tag>
+```
+To stop and delete all behat testing containers use
+
+```bash
+  ./behat-test stop
+```
+and confirm.
+
+### PHPUinit  tests
+For setting up and stopping PHPUnit tests follow the same process as for the Behat tests but replace "behat-test" with "phpunit-test"
+
+To start a test issue
+```bash
+  ./phpunit-test <relative/path/to/the/testfile.php>
+```
+
+Now back to the original Readme:
+
+----
 ## Features:
 * All supported database servers (PostgreSQL, MySQL, Micosoft SQL Server, Oracle XE)
 * Behat/Selenium configuration for Firefox and Chrome
