@@ -149,4 +149,9 @@ if (getenv('MOODLE_DOCKER_MLBACKEND')) {
     define('TEST_MLBACKEND_PYTHON_PASSWORD', 'sshhhh');
 }
 
+if (defined('BEHAT_SITE_RUNNING')) {
+    // Disable asynchronous backups for Behat.
+    $CFG->backup_async_enabled = false;
+}
+
 require_once(__DIR__ . '/lib/setup.php');
