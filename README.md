@@ -7,7 +7,9 @@ This repository contains Docker configuration aimed at Moodle developers and tes
 All changes are purely for the convenience of the user.
 
 Two scripts will allow to set up and run Behat and PHPUnit tests with one command instead of using the rather complex original process (see original Readme after this interlude).
-The resulting testing environment will otherwise be identical.
+The resulting testing environment will otherwise be identical. 
+
+The script will try to identify the new structure from Moodle 5.1 on and set the environment accordingly.
 
 To start behat testing cd into this directory and issue
 ```bash
@@ -422,3 +424,6 @@ The following Moodle customised docker images are close companions of this proje
 ## Contributions
 
 Are extremely welcome!
+
+-----------
+Version 2.0

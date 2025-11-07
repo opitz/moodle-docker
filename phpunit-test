@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-version=1.6b
+version=2.0
 
 #export MOODLE_DOCKER_WWWROOT=$1
 export MOODLE_DOCKER_DB=mariadb
@@ -108,11 +108,16 @@ get_webroot() {
 }
 
 phpunit_init() {
-	# get webroot
 	get_webroot
 
 	echo "Initializing phpunit testing for a single run"
-	bin/moodle-docker-compose exec webserver php admin/tool/phpunit/cli/init.php
+		if [ -d ${webroot}/public ]; then
+    	bin/moodle-docker-compose exec webserver php public/admin/tool/phpunit/cli/init.php
+  	else
+    	bin/moodle-docker-compose exec webserver php admin/tool/phpunit/cli/init.php
+  	fi
+
+  echo "==> PHPUnit testing up and ready for tests"
 }
 
 phpunit_stop() {
@@ -132,66 +137,68 @@ phpunit_stop() {
 	exit 1
 }
 
-if [ ! -z ${help+x} ]; then
-	help
-fi
+selector() {
+  if [ ! -z ${help+x} ]; then
+    help
+  fi
 
-if [[ $1 == "?" ]]
-then
-	help
-fi
+  if [[ $1 == "?" ]]
+  then
+    help
+  fi
 
-if [[ $1 == "--help" ]]
-then
-	help
-fi
+  if [[ $1 == "--help" ]]
+  then
+    help
+  fi
 
-if [[ $1 == "" ]]
-then
-	usage
-fi
+  if [[ $1 == "" ]]
+  then
+    usage
+  fi
 
-if [[ $1 == 'up' ]]
-then
-	echo "Bringing up testing environment"
-	phpunit_up
-	echo "==> PHPUnit testing environment is up"
-	echo "==> You may now start a VNC client pointing at 0.0.0.0:5900 and enter the password 'secret'"
-	exit 1
-fi
+  if [[ $1 == 'up' ]]
+  then
+    echo "Bringing up testing environment"
+    phpunit_up
+    echo "==> PHPUnit testing environment is up"
+    echo "==> You may now start a VNC client pointing at 0.0.0.0:5900 and enter the password 'secret'"
+    exit 1
+  fi
 
-if [[ $1 == 'init' ]]
-then
-	echo "Initializing testing environment"
-	phpunit_init $3 $4
-	echo "==> PHPUnit testing up and ready for tests"
-	exit 1
-fi
+  if [[ $1 == 'init' ]]
+  then
+    echo "Initializing testing environment"
+    phpunit_init $3 $4
+    exit 1
+  fi
 
-if [[ $1 == 'start' ]]
-then
-	echo "Starting and initializing testing environment"
-	phpunit_up
-	phpunit_init $3 $4
-	echo "==> PHPUnit testing up and ready for tests"
-	exit 1
-fi
+  if [[ $1 == 'start' ]]
+  then
+    echo "Starting and initializing testing environment"
+    phpunit_up
+    phpunit_init $3 $4
+    exit 1
+  fi
 
-if [[ $1 == 'status' ]]
-then
-	show_status
-fi
+  if [[ $1 == 'status' ]]
+  then
+    show_status
+  fi
 
-if [[ $1 == 'stop' ]]
-then
-	phpunit_stop
-fi
+  if [[ $1 == 'stop' ]]
+  then
+    phpunit_stop
+  fi
+}
 
+selector "$@"
 get_webroot
 
 # Run phpunit tests
 echo "==> Test scenarios with '$1'"
 #bin/moodle-docker-compose exec webserver php admin/tool/behat/cli/run.php --name="$1"
 bin/moodle-docker-compose exec webserver vendor/bin/phpunit $1
+
 echo "==> FIN"
 
