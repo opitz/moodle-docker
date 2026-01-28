@@ -6,7 +6,7 @@ version=2.0
 export MOODLE_DOCKER_DB=mariadb
 #export MOODLE_DOCKER_DB=pgsql
 export MOODLE_DOCKER_SELENIUM_VNC_PORT=5900
-export MOODLE_DOCKER_PHP_VERSION=8.2
+export MOODLE_DOCKER_PHP_VERSION=8.3
 
 # get options
 while getopts ":fhlnp:rt:vw:" x; do
